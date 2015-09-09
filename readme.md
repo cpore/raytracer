@@ -1,6 +1,6 @@
 Project Notes
 =============
-This is a place-holder for my CS410 Ray Tracer project
+CS410 Ray Tracer
 
 Libraries
 ------------

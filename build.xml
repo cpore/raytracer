@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<project name="raytracer" default="main" basedir=".">
+	<!-- Sets variables which can later be used. -->
+	<!-- The value of a property is accessed via ${} -->
+	<property name="src.dir" location="src/main" />
+
+	<property name="build.dir" location="bin" />
+
+	<property name="jar.dir" location="jar" />
+	
+	<property name="outputdir.property" value="src/models/output/"/>
+	<property name="classpath.property" value="${basedir}/com.my.namespace/path/to/thing"/>
+
+	<!-- Variables used for JUnit testing -->
+	<property name="test.dir" location="src/test" />
+	<property name="test.report.dir" location="src/testreport" />
+
+	<!-- Define the classpath which includes the junit.jar and the classes after compiling-->
+	<path id="junit.class.path">
+		<pathelement location="/home/cpore/eclipse/plugins/org.junit_4.12.0.v201504281640/junit.jar" />
+		<pathelement location="${build.dir}" />
+	</path>
+
+
+	<!-- Deletes the existing build, docs and dist directory-->
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${test.report.dir}" />
+		<delete dir="${jar.dir}" />
+	</target>
+
+	<!-- Creates the  build, docs and dist directory-->
+	<target name="makedir">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${test.report.dir}" />
+		<mkdir dir="${jar.dir}" />
+	</target>
+
+	<!-- Compiles the java code (including the usage of library for JUnit -->
+	<target name="compile" depends="clean, makedir">
+		<javac includeantruntime="false" srcdir="${src.dir}" destdir="${build.dir}">
+			<classpath refid="junit.class.path" />
+		</javac>
+
+	</target>
+
+	<!--Creates the deployable jar file  -->
+	<target name="jar" depends="compile">
+		<jar destfile="${jar.dir}\de.vogella.build.test.ant.jar" basedir="${build.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="test.Main" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- Run the JUnit Tests -->
+	<!-- Output is XML, could also be plain-->
+	<target name="junit" depends="compile">
+		<junit printsummary="on" fork="true" haltonfailure="no">
+			<classpath refid="junit.class.path" />
+			<formatter type="xml" />
+			<batchtest todir="${test.report.dir}">
+				<fileset dir="${src.dir}">
+					<include name="**/*Test*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="run">
+
+		<path id="runtime.path">
+			<fileset dir="${classpath.property}" includes="*.jar"/>
+		</path>
+		<echo message = "Ant output directory: ${outputdir.property}"/>
+		<echo message = "Ant input directory for tutorials: ${inputdir.property}"/>
+		<echo message = "Ant classpath directory: ${classpath.property}"/>
+		<java classname="my.namespace.ClassName" fork="false" classpathref="runtime.path">
+			<arg value="${outputdir.property}"/>
+			<arg value="${inputdir.property}"/>
+		</java>
+	</target>
+
+	<target name="main" depends="compile, junit">
+		<description>Main target</description>
+	</target>
+
+</project>
+
