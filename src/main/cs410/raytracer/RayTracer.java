@@ -1,6 +1,9 @@
 package cs410.raytracer;
 
+import java.io.IOException;
 import java.util.Scanner;
+
+import cs410.raytracer.Model.InvalidFormatException;
 
 public class RayTracer {
 	
@@ -19,7 +22,19 @@ public class RayTracer {
 		String inputfile = args[0];
 		String outputfile = args[1];
 		
-		Model model = new Model();
+		Model model = null;
+		try {
+			model = new Model(inputfile);
+		} catch (NumberFormatException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InvalidFormatException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		Scanner scanner = new Scanner(System.in);
 
@@ -65,7 +80,14 @@ public class RayTracer {
 					continue;
 				}
 				
-				model.write(outputfile);
+				try {
+					model.writeFile(outputfile);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				scanner.close();
+				System.exit(0);
 
 			} else {
 				System.out.println("Bad Command. Try again.");
