@@ -1,6 +1,6 @@
 package cs410.raytracer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import cs410.raytracer.Model.InvalidFormatException;
 
 public class TestModel {
 
@@ -53,9 +52,9 @@ public class TestModel {
 	@Test
 	public void testWriteFile() {
 		try {
-			Model model = new Model("src/models/small/dodecahedron.txt");
-			model.writeFile("src/testoutput/dodecahedron.txt");
-			
+			Model model = ModelIO.readFile("src/models/small/dodecahedron.txt");
+			ModelIO.writeFile(model, "src/testoutput/dodecahedron.txt");
+
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -69,11 +68,11 @@ public class TestModel {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-		
+
 		try {
-			
-			Model model = new Model("src/models/large/bunny.txt");
-			model.writeFile("src/testoutput/bunny.txt");
+
+			Model model = ModelIO.readFile("src/models/large/bunny.txt");
+			ModelIO.writeFile(model, "src/testoutput/bunny.txt");
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -87,11 +86,11 @@ public class TestModel {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-		
-try {
-			
-			Model model = new Model("src/models/small/sphere.txt");
-			model.writeFile("src/testoutput/shpere.txt");
+
+		try {
+
+			Model model = ModelIO.readFile("src/models/small/sphere.txt");
+			ModelIO.writeFile(model, "src/testoutput/shpere.txt");
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -105,8 +104,8 @@ try {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-		
-		
+
+
 	}
 
 }

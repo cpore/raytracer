@@ -3,8 +3,6 @@ package cs410.raytracer;
 import java.io.IOException;
 import java.util.Scanner;
 
-import cs410.raytracer.Model.InvalidFormatException;
-
 public class RayTracer {
 	
 
@@ -24,7 +22,7 @@ public class RayTracer {
 		
 		Model model = null;
 		try {
-			model = new Model(inputfile);
+			model = ModelIO.readFile(inputfile);
 		} catch (NumberFormatException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -81,7 +79,7 @@ public class RayTracer {
 				}
 				
 				try {
-					model.writeFile(outputfile);
+					ModelIO.writeFile(model, outputfile);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
