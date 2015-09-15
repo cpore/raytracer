@@ -36,12 +36,75 @@ public class TestModel {
 
 	@Test
 	public void testScale() {
-		fail("Not yet implemented");
+
+		try {
+			Model model = ModelIO.readFile("src/models/small/dodecahedron.txt");
+			model.scale(10f, 10f, 10f);
+			ModelIO.writeFile(model, "src/testoutput/dodecahedron_scaled10.ply");
+			
+			model.scale(1f/10f, 1f/10f, 1f/10f);
+			ModelIO.writeFile(model, "src/testoutput/dodecahedron_unscaled10.ply");
+			
+			model = ModelIO.readFile("src/models/small/sphere.txt");
+			model.scale(10f, 10f, 10f);
+			ModelIO.writeFile(model, "src/testoutput/sphere_scaled10.ply");
+
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail(e.getMessage());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail(e.getMessage());
+		} catch (InvalidFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+		
+		Runtime r = Runtime.getRuntime();
+		try {
+			r.exec("meshlab src/testoutput/dodecahedron_scaled10.ply");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testTranslate() {
-		fail("Not yet implemented");
+		try {
+			Model model = ModelIO.readFile("src/models/small/dodecahedron.txt");
+			model.translate(10f, 10f, 10f);
+			ModelIO.writeFile(model, "src/testoutput/dodecahedron_translated10.ply");
+			
+			ModelIO.readFile("src/testoutput/dodecahedron_translated10.ply");
+			
+			model.translate(-10f, -10f, -10f);
+			ModelIO.writeFile(model, "src/testoutput/dodecahedron_untranslated10.ply");
+			
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail(e.getMessage());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail(e.getMessage());
+		} catch (InvalidFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+		
+		Runtime r = Runtime.getRuntime();
+		try {
+			r.exec("meshlab src/testoutput/dodecahedron_translated10.ply");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
@@ -53,7 +116,7 @@ public class TestModel {
 	public void testWriteFile() {
 		try {
 			Model model = ModelIO.readFile("src/models/small/dodecahedron.txt");
-			ModelIO.writeFile(model, "src/testoutput/dodecahedron.txt");
+			ModelIO.writeFile(model, "src/testoutput/dodecahedron.ply");
 
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
@@ -72,7 +135,7 @@ public class TestModel {
 		try {
 
 			Model model = ModelIO.readFile("src/models/large/bunny.txt");
-			ModelIO.writeFile(model, "src/testoutput/bunny.txt");
+			ModelIO.writeFile(model, "src/testoutput/bunny.ply");
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -90,7 +153,7 @@ public class TestModel {
 		try {
 
 			Model model = ModelIO.readFile("src/models/small/sphere.txt");
-			ModelIO.writeFile(model, "src/testoutput/shpere.txt");
+			ModelIO.writeFile(model, "src/testoutput/shpere.ply");
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

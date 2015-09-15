@@ -1,15 +1,18 @@
 package cs410.raytracer;
 
 public class Vector {
+	public static final int x = 0;
+	public static final int y = 1;
+	public static final int z = 2;
+	public static final int w = 3;
 
-	public float x;
-	public float y;
-	public float z;
+	public float[] p = new float[4];
 
-	public Vector(float x, float y, float z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+	public Vector(float px, float py, float pz, float pw) {
+		p[x] = px;
+		p[y] = py;
+		p[z] = pz;
+		p[w]= pw;
 	}
 
 	/**
@@ -18,9 +21,9 @@ public class Vector {
 	 * @param v
 	 */
 	public void add(Vector v){
-		x += v.x;
-		y += v.y;
-		z += v.z;
+		p[x] += v.p[x];
+		p[y] += v.p[y];
+		p[z] += v.p[z];
 	}
 
 	/**
@@ -29,9 +32,9 @@ public class Vector {
 	 * @param v
 	 */
 	public void subtract(Vector v){
-		x += (-v.x);
-		y += (-v.y);
-		z += (-v.z);
+		p[x] += (-v.p[x]);
+		p[y] += (-v.p[y]);
+		p[z] += (-v.p[z]);
 	}
 
 
@@ -41,16 +44,18 @@ public class Vector {
 	 * @param v
 	 */
 	public float dotProduct(Vector v){
-		float xVal = x * v.x;
-		float yVal = y * v.y;
-		float zVal = z * v.z;
+		float xVal = p[x] * v.p[x];
+		float yVal = p[y] * v.p[y];
+		float zVal = p[z] * v.p[z];
+		float wVal = p[w] * v.p[w];
 
-		return xVal + yVal + zVal;
+		return xVal + yVal + zVal + wVal;
 	}
 
 	/**
 	 * Calculates and returns a Vector that is the cross product of this Vector
-	 * and v
+	 * and v. A cross-product is a normal Vector (perpendicular) to the two
+	 * given vectors
 	 * d = u x v
 	 * 
 	 * cx = ay*bz - az*by
@@ -60,11 +65,11 @@ public class Vector {
 	 * @param v
 	 */
 	public Vector crossProduct(Vector v){
-		float cx = (y * v.z) - (z * v.y);
-		float cy = (z * v.x) - (x * v.z);
-		float cz = (x * v.y) - (y * v.x);
+		float cx = (p[y] * v.p[z]) - (p[z] * v.p[y]);
+		float cy = (p[z] * v.p[x]) - (p[x] * v.p[z]);
+		float cz = (p[x] * v.p[y]) - (p[y] * v.p[x]);
 
-		return new Vector(cx, cy, cz);
+		return new Vector(cx, cy, cz, 1);
 	}
 
 	/**
@@ -73,9 +78,9 @@ public class Vector {
 	 * @param v
 	 */
 	public void multiply(float s){
-		x *= s;
-		y *= s;
-		z += s;
+		p[x] *= s;
+		p[y] *= s;
+		p[z] += s;
 	}
 
 	/**
@@ -84,9 +89,9 @@ public class Vector {
 	 * @param v
 	 */
 	public void divide(float s){
-		x /= s;
-		y /= s;
-		z /= s;
+		p[x] /= s;
+		p[y] /= s;
+		p[z] /= s;
 	}
 
 	/**
@@ -94,7 +99,7 @@ public class Vector {
 	 * @return the magnitude of this Vector
 	 */
 	public float getMagnitude(){
-		return (float) Math.sqrt((x * x) + (y * y) + (z * z));
+		return (float) Math.sqrt((p[x] * p[x]) + (p[y] * p[y]) + (p[z] * p[z]));
 	}
 
 	/**
@@ -103,12 +108,12 @@ public class Vector {
 	 */
 	public Vector getNormal(){
 		float m = getMagnitude();
-		return new Vector (x / m, y /m, z /m);
+		return new Vector (p[x] / m, p[y] /m, p[z] /m, 1);
 	}
 
 	@Override
 	public String toString() {
-		return Utils.prettyPrint(x) + " " + Utils.prettyPrint(y) + " " + Utils.prettyPrint(z);
+		return Utils.prettyPrint(p[x]) + " " + Utils.prettyPrint(p[y]) + " " + Utils.prettyPrint(p[z]);
 	}
 
 

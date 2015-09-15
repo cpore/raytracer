@@ -7,11 +7,10 @@ import java.io.IOException;
 
 public class ModelIO {
 
-	private ModelIO() {	}
+	private ModelIO() {
+	}
 
-
-	public static Model readFile(String filename)
-			throws NumberFormatException, IOException, InvalidFormatException {
+	public static Model readFile(String filename) throws NumberFormatException, IOException, InvalidFormatException {
 		Integer lineIndex = new Integer(1);
 
 		BufferedReader br = new BufferedReader(new FileReader(filename));
@@ -27,7 +26,7 @@ public class ModelIO {
 			throw new InvalidFormatException("Could not find the number of verticies.");
 		}
 
-		Vector[] verticies = readVerticies(br, numVerticies, lineIndex);
+		float[][] verticies = readVerticies(br, numVerticies, lineIndex);
 
 		Face[] faces = readFaces(br, numFaces, numVerticies, lineIndex);
 
@@ -66,8 +65,8 @@ public class ModelIO {
 		return numFaces;
 	}
 
-
-	private static String readFileHeader(BufferedReader br, Integer lineIndex) throws IOException, InvalidFormatException {
+	private static String readFileHeader(BufferedReader br, Integer lineIndex)
+			throws IOException, InvalidFormatException {
 		StringBuilder headerBuilder = new StringBuilder();
 		String line = null;
 
@@ -87,7 +86,8 @@ public class ModelIO {
 		return headerBuilder.toString();
 	}
 
-	private static Face[] readFaces(BufferedReader br, int numFaces, int numVerticies, Integer lineIndex) throws IOException, InvalidFormatException {
+	private static Face[] readFaces(BufferedReader br, int numFaces, int numVerticies, Integer lineIndex)
+			throws IOException, InvalidFormatException {
 		Face[] faces = new Face[numFaces];
 		int idx = 0;
 
@@ -127,18 +127,18 @@ public class ModelIO {
 		return faces;
 	}
 
-	private static Vector[] readVerticies(BufferedReader br, int numVerticies, Integer lineIndex) throws IOException, InvalidFormatException {
+	private static float[][] readVerticies(BufferedReader br, int numVerticies, Integer lineIndex)
+			throws IOException, InvalidFormatException {
 
-		Vector[] verticies = new Vector[numVerticies];
-		int idx = 0;
+		// Vector[] verticies = new Vector[numVerticies];
+		float[][] verticies = new float[4][numVerticies];
+		int col = 0;
 
 		String line = null;
 
 		// read the Vertex lines
 		while ((line = br.readLine()) != null) {
-			float x;
-			float y;
-			float z;
+
 			// Deal with the line
 			String[] parts = line.split("\\s");
 
@@ -147,31 +147,32 @@ public class ModelIO {
 			}
 			// read the values from the line
 			try {
-				x = Float.parseFloat(parts[Model.x]);
+				verticies[Model.x][col] = Float.parseFloat(parts[Model.x]);
 			} catch (NumberFormatException nfe) {
 				throw new InvalidFormatException("Bad x value at line: " + lineIndex);
 			}
 
 			try {
-				y = Float.parseFloat(parts[Model.y]);
+				verticies[Model.y][col] = Float.parseFloat(parts[Model.y]);
 			} catch (NumberFormatException nfe) {
 				throw new InvalidFormatException("Bad y value at line: " + lineIndex);
 			}
 
 			try {
-				z = Float.parseFloat(parts[Model.z]);
+				verticies[Model.z][col] = Float.parseFloat(parts[Model.z]);
 			} catch (NumberFormatException nfe) {
 				throw new InvalidFormatException("Bad z value at line: " + lineIndex);
 			}
 
-			// add the newly read values as a vertex
-			verticies[idx++] = new Vector(x, y, z);
+			verticies[Model.w][col] = 1;
+
+			col++;
 
 			// we were able to get the values, so increment out line counter
 			lineIndex++;
 
 			// we read all the verticies
-			if (idx == numVerticies) {
+			if (col == numVerticies) {
 				break;
 			}
 		}
@@ -184,8 +185,10 @@ public class ModelIO {
 
 		fw.write(model.fileHeader);
 
-		for (Vector v : model.verticies) {
-			fw.write(v.toString() + "\n");
+		for (int j = 0; j < model.verticies[1].length; j++) {
+			fw.write(Utils.prettyPrint(model.verticies[Model.x][j]) + " "
+					+ Utils.prettyPrint(model.verticies[Model.y][j]) + " "
+					+ Utils.prettyPrint(model.verticies[Model.z][j]) + "\n");
 		}
 
 		for (Face f : model.faces) {
@@ -194,7 +197,5 @@ public class ModelIO {
 
 		fw.close();
 	}
-
-	
 
 }
