@@ -1,7 +1,7 @@
 package cs410.raytracer;
 
 public class Transform {
-	
+
 	public static final int x = 0;
 	public static final int y = 1;
 	public static final int z = 2;
@@ -20,41 +20,53 @@ public class Transform {
 	 * @param that
 	 */
 	public Transform multiply(Transform that) {
-		Transform result = new Transform(new float[4][4]);
-		
+		float[][] result = new float[4][4];
+
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				Vector row = new Vector(this.matrix[i][0], this.matrix[i][1], this.matrix[i][2],
-						this.matrix[i][3]);
-				
-				Vector col = new Vector(that.matrix[0][j], that.matrix[1][j], that.matrix[2][j],
-						this.matrix[3][j]);
-				
-				result.matrix[i][j] = row.dotProduct(col);
+				Vector row = new Vector(this.matrix[i][0], this.matrix[i][1], this.matrix[i][2], this.matrix[i][3]);
+
+				Vector col = new Vector(that.matrix[0][j], that.matrix[1][j], that.matrix[2][j], this.matrix[3][j]);
+
+				result[i][j] = row.dotProduct(col);
 
 			}
 
 		}
-		return result;
+		return new Transform(result);
 	}
 
 	public void apply(Model m) {
-		Transform result = new Transform(new float[4][m.verticies[1].length]);
-		
+		float[][] result = new float[4][m.verticies[1].length];
+
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < m.verticies[1].length; j++) {
-				Vector row = new Vector(this.matrix[i][0], this.matrix[i][1], this.matrix[i][2],
-						this.matrix[i][3]);
-				
-				Vector col = new Vector(m.verticies[0][j], m.verticies[1][j], m.verticies[2][j],
-						m.verticies[3][j]);
-				
-				result.matrix[i][j] = row.dotProduct(col);
+				Vector row = new Vector(this.matrix[i][0], this.matrix[i][1], this.matrix[i][2], this.matrix[i][3]);
+
+				Vector col = new Vector(m.verticies[0][j], m.verticies[1][j], m.verticies[2][j], m.verticies[3][j]);
+
+				result[i][j] = row.dotProduct(col);
 
 			}
 		}
+
+		m.verticies = result;
+	}
+
+	/**
+	 * 
+	 * @return A transform that is the transpose of this
+	 */
+	public Transform getTranspose() {
+
+		float[][] transpose = new float[4][4];
+
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 4; j++)
+				transpose[j][i] = matrix[i][j];
 		
-		m.verticies = result.matrix;
+		return new Transform(transpose);
+
 	}
 
 }

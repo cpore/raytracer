@@ -108,7 +108,18 @@ public class Vector {
 	 */
 	public Vector getNormal(){
 		float m = getMagnitude();
-		return new Vector (p[x] / m, p[y] /m, p[z] /m, 1);
+		return new Vector (p[x] / m, p[y] / m, p[z] / m, 1);
+	}
+	
+	/**
+	 * Normalizes this vector.
+	 */
+	public void normalize(){
+		float m = getMagnitude();
+		p[x] = p[x] / m;
+		p[y] = p[y] / m;
+		p[z] = p[z] / m;
+		p[w] = 1;
 	}
 
 	@Override

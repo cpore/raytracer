@@ -19,7 +19,7 @@ public class Model {
 	public Vector meanVertex;
 	public float[] boundingBox;
 	public Face[] faces;
-	
+
 	private Transform currTransform;
 
 	public Model(String fileHeader, float[][] verticies, Face[] faces){
@@ -34,7 +34,7 @@ public class Model {
 		boundingBox[MAX_Y] = Float.MIN_VALUE;
 		boundingBox[MIN_Z] = Float.MAX_VALUE;
 		boundingBox[MAX_Z] = Float.MIN_VALUE;
-		
+
 		float totalx = 0;
 		float totaly = 0;
 		float totalz = 0;
@@ -69,7 +69,7 @@ public class Model {
 		meanVertex = new Vector(totalx / verticies[1].length, totaly / verticies[1].length, totalz / verticies[1].length, 1);
 
 	}
-	
+
 	private Transform getScaleTransform(float sx, float sy, float sz){
 		float[][] scaleMatrix = new float[][]{
 			{ sx, 0, 0, 0 },
@@ -79,7 +79,7 @@ public class Model {
 		};
 		return new Transform(scaleMatrix);
 	}
-	
+
 	private Transform getTranslateTransform(float tx, float ty, float tz){
 		float[][] translateMatrix = new float[][]{
 			{ 1, 0, 0, tx },
@@ -89,7 +89,18 @@ public class Model {
 		};
 		return new Transform(translateMatrix);
 	}
-	
+
+	private Transform getZaxisRotationTransform(float theta){
+		float[][] zRotation = new float[][]{
+			{ (float) Math.cos(theta), -(float) Math.sin(theta), 0, 0 },
+			{ (float) Math.sin(theta), (float) Math.cos(theta) , 0, 0 },
+			{ 0                      , 0                       , 1, 0 },
+			{ 0                      , 0                       , 0, 1 }
+		};
+
+		return new Transform(zRotation);
+	}
+
 	private Transform getIdentityTransform(){
 		float[][] identityMatrix = new float[][]{
 			{ 1, 0, 0, 0 },
@@ -111,7 +122,51 @@ public class Model {
 		translateTransform.apply(this);
 	}
 
+	private Transform createRotationMatrix(float rx, float ry, float rz){
+		//normalize the axis of rotation
+		Vector w = new Vector(rx, ry, rz, 1);
+		w.normalize();
+		
+		// create an axis m not parallel to w
+		// by setting the smallest term in w to 1
+		// and renormalizing
+		float smallest = w.p[x];
+		int idx = x;
+		if(w.p[y] < smallest){
+			smallest = w.p[y];
+			idx = y;
+		}
+		if(w.p[z] < smallest){
+			smallest = w.p[z];
+			idx = z;
+		}
+		
+		Vector m = new Vector(w.p[x], w.p[y], w.p[z], 1);
+		m.p[idx] = 1f;
+		m.normalize();
+		
+		Vector u = w.crossProduct(m);
+		Vector v = w.crossProduct(u);
+		
+		float[][] rotationMatrix =  new float[][]{
+			{ u.p[x], u.p[y], u.p[z], 0 },
+			{ v.p[x], v.p[y], v.p[z], 0 },
+			{ w.p[x], w.p[y], w.p[z], 0 },
+			{ 0     , 0     , 0     , 1 }
+		};
+		
+		return new Transform(rotationMatrix);		
+	}
+
 	public void rotate(float rx, float ry, float rz, float theta) {
+		Transform zRotation = getZaxisRotationTransform(theta);
+		Transform rotation = createRotationMatrix(rx, ry, rz);
+		Transform rotationTranspose = rotation.getTranspose();
+		
+		Transform r1 = zRotation.multiply(rotation);
+		Transform r2 = rotationTranspose.multiply(r1);
+		
+		r2.apply(this);
 
 	}
 
