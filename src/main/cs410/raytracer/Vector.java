@@ -12,7 +12,7 @@ public class Vector {
 		p[x] = px;
 		p[y] = py;
 		p[z] = pz;
-		p[w]= pw;
+		p[w] = pw;
 	}
 
 	/**
@@ -32,9 +32,9 @@ public class Vector {
 	 * @param v
 	 */
 	public void subtract(Vector v){
-		p[x] += (-v.p[x]);
-		p[y] += (-v.p[y]);
-		p[z] += (-v.p[z]);
+		p[x] -= (-v.p[x]);
+		p[y] -= (-v.p[y]);
+		p[z] -= (-v.p[z]);
 	}
 
 
@@ -80,7 +80,7 @@ public class Vector {
 	public void multiply(float s){
 		p[x] *= s;
 		p[y] *= s;
-		p[z] += s;
+		p[z] *= s;
 	}
 
 	/**

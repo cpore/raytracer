@@ -91,11 +91,12 @@ public class Model {
 	}
 
 	private Transform getZaxisRotationTransform(float theta){
+		float theta2 = (float) Math.toRadians(theta);
 		float[][] zRotation = new float[][]{
-			{ (float) Math.cos(theta), -(float) Math.sin(theta), 0, 0 },
-			{ (float) Math.sin(theta), (float) Math.cos(theta) , 0, 0 },
-			{ 0                      , 0                       , 1, 0 },
-			{ 0                      , 0                       , 0, 1 }
+			{ (float) Math.cos(theta2), (float) -Math.sin(theta2), 0, 0 },
+			{ (float) Math.sin(theta2), (float) Math.cos(theta2) , 0, 0 },
+			{ 0                       , 0                        , 1, 0 },
+			{ 0                       , 0                        , 0, 1 }
 		};
 
 		return new Transform(zRotation);
@@ -141,12 +142,14 @@ public class Model {
 			idx = z;
 		}
 		
-		Vector m = new Vector(w.p[x], w.p[y], w.p[z], 1);
+		Vector m = new Vector(w.p[x], w.p[y], w.p[z], 1f);
 		m.p[idx] = 1f;
 		m.normalize();
 		
 		Vector u = w.crossProduct(m);
+		u.normalize();
 		Vector v = w.crossProduct(u);
+		v.normalize();
 		
 		float[][] rotationMatrix =  new float[][]{
 			{ u.p[x], u.p[y], u.p[z], 0 },
@@ -165,7 +168,6 @@ public class Model {
 		
 		Transform r1 = zRotation.multiply(rotation);
 		Transform r2 = rotationTranspose.multiply(r1);
-		
 		r2.apply(this);
 
 	}

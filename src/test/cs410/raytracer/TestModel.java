@@ -38,17 +38,15 @@ public class TestModel {
 	public void testScale() {
 
 		try {
-			Model model = ModelIO.readFile("src/models/small/dodecahedron.txt");
+			Model model = ModelIO.readFile("src/models/small/pyramid.ply");
 			model.scale(10f, 10f, 10f);
-			ModelIO.writeFile(model, "src/testoutput/dodecahedron_scaled10.ply");
+			ModelIO.writeFile(model, "src/testoutput/pyramid_scaled10.ply");
 			
-			model.scale(1f/10f, 1f/10f, 1f/10f);
+			ModelIO.readFile("src/testoutput/pyramid_translated10.ply");
+			
+			model.scale(-10f, -10f, -10f);
 			ModelIO.writeFile(model, "src/testoutput/dodecahedron_unscaled10.ply");
 			
-			model = ModelIO.readFile("src/models/small/sphere.txt");
-			model.scale(10f, 10f, 10f);
-			ModelIO.writeFile(model, "src/testoutput/sphere_scaled10.ply");
-
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -62,24 +60,16 @@ public class TestModel {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-		
-		Runtime r = Runtime.getRuntime();
-		try {
-			r.exec("meshlab src/testoutput/dodecahedron_scaled10.ply");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	@Test
 	public void testTranslate() {
 		try {
-			Model model = ModelIO.readFile("src/models/small/dodecahedron.txt");
+			Model model = ModelIO.readFile("src/models/small/pyramid.ply");
 			model.translate(10f, 10f, 10f);
-			ModelIO.writeFile(model, "src/testoutput/dodecahedron_translated10.ply");
+			ModelIO.writeFile(model, "src/testoutput/pyramid_translated10.ply");
 			
-			ModelIO.readFile("src/testoutput/dodecahedron_translated10.ply");
+			ModelIO.readFile("src/testoutput/pyramid_translated10.ply");
 			
 			model.translate(-10f, -10f, -10f);
 			ModelIO.writeFile(model, "src/testoutput/dodecahedron_untranslated10.ply");
@@ -98,18 +88,70 @@ public class TestModel {
 			fail(e.getMessage());
 		}
 		
-		Runtime r = Runtime.getRuntime();
+		/*Runtime r = Runtime.getRuntime();
 		try {
 			r.exec("meshlab src/testoutput/dodecahedron_translated10.ply");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	@Test
 	public void testRotate() {
-		fail("Not yet implemented");
+		try {
+			Model model = ModelIO.readFile("src/models/small/pyramid.ply");
+			model.rotate(0f, 1f, 0f, 45);
+			ModelIO.writeFile(model, "src/testoutput/pyramid_rotated_y_45.ply");
+			
+			model = ModelIO.readFile("src/models/small/pyramid.ply");
+			model.rotate(0f, 1f, 0f, 90);
+			ModelIO.writeFile(model, "src/testoutput/pyramid_rotated_y_90.ply");
+			
+			model.rotate(0f, 1f, 0f, -45);
+			ModelIO.writeFile(model, "src/testoutput/pyramid_unrotated_y_45.ply");
+			
+			model = ModelIO.readFile("src/models/small/pyramid.ply");
+			model.rotate(0f, 1f, 0f, -360);
+			ModelIO.writeFile(model, "src/testoutput/pyramid_rotated_y_360.ply");
+			
+			model = ModelIO.readFile("src/models/small/pyramid.ply");
+			model.rotate(1f, 0f, 0f, 90);
+			ModelIO.writeFile(model, "src/testoutput/pyramid_rotated_x_90.ply");
+			
+			model = ModelIO.readFile("src/models/medium/beethoven.ply");
+			model.rotate(0f, 1f, 0f, 90);
+			ModelIO.writeFile(model, "src/testoutput/beethoven_rotated_y_90.ply");
+			
+			model = ModelIO.readFile("src/models/medium/beethoven.ply");
+			model.rotate(1f, 0f, 0f, 90);
+			ModelIO.writeFile(model, "src/testoutput/beethoven_rotated_x_90.ply");
+			
+			model = ModelIO.readFile("src/models/large/bunny.ply");
+			model.rotate(0f, 1f, 0f, 90);
+			ModelIO.writeFile(model, "src/testoutput/bunny_rotated_y_90.ply");
+
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail(e.getMessage());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail(e.getMessage());
+		} catch (InvalidFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+		
+		/*Runtime r = Runtime.getRuntime();
+		try {
+			r.exec("meshlab src/testoutput/pyramid_rotated_y_45.ply");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 	}
 
 	@Test
@@ -117,43 +159,16 @@ public class TestModel {
 		try {
 			Model model = ModelIO.readFile("src/models/small/dodecahedron.txt");
 			ModelIO.writeFile(model, "src/testoutput/dodecahedron.ply");
-
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail(e.getMessage());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail(e.getMessage());
-		} catch (InvalidFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-
-		try {
-
-			Model model = ModelIO.readFile("src/models/large/bunny.txt");
+			
+			model = ModelIO.readFile("src/models/large/bunny.txt");
 			ModelIO.writeFile(model, "src/testoutput/bunny.ply");
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail(e.getMessage());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail(e.getMessage());
-		} catch (InvalidFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-
-		try {
-
-			Model model = ModelIO.readFile("src/models/small/sphere.txt");
+			
+			model = ModelIO.readFile("src/models/small/sphere.txt");
 			ModelIO.writeFile(model, "src/testoutput/shpere.ply");
+			
+			model = ModelIO.readFile("src/models/small/pyramid.ply");
+			ModelIO.writeFile(model, "src/testoutput/pyramid.ply");
+
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -167,7 +182,6 @@ public class TestModel {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-
 
 	}
 
