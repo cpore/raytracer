@@ -13,7 +13,7 @@ public class RayTracer {
 	public static void main(String[] args) {
 		if (args.length != 2) {
 			System.out.println("You failed specify exactly two arguments.");
-			System.out.println("Usage: rt.jar <inputfile> <outputfile>");
+			System.out.println("Usage: raytracer.jar <inputfile> <outputfile>");
 			System.exit(1);
 		}
 		
@@ -40,46 +40,47 @@ public class RayTracer {
 
 			System.out.println("Enter a Command (Case Sensitive): ");
 
-			String[] command = scanner.nextLine().split("\\s");
+			String[] cmd = scanner.nextLine().split("\\s");
 
-			if ("S".equals(command[0])) {
-				if(command.length != 4){
+			if ("S".equals(cmd[0])) {
+				if(cmd.length != 4){
 					System.out.println("Wrong number of arguments. Try again.");
 					continue;
 				}
 				
-				float[] arg = getArgs(command);
+				float[] arg = getArgs(cmd);
 								
-				model.scale(arg[1], arg[2], arg[3]);
+				model.scale(arg[0], arg[1], arg[2]);
 
-			} else if ("T".equals(command[0])) {
-				if(command.length != 4){
+			} else if ("T".equals(cmd[0])) {
+				if(cmd.length != 4){
 					System.out.println("Wrong number of arguments. Try again.");
 					continue;
 				}
 				
-				float[] arg = getArgs(command);
+				float[] arg = getArgs(cmd);
 				
-				model.translate(arg[1], arg[2], arg[3]);
+				model.translate(arg[0], arg[1], arg[2]);
 
-			} else if ("R".equals(command[0])) {
-				if(command.length != 5){
+			} else if ("R".equals(cmd[0])) {
+				if(cmd.length != 5){
 					System.out.println("Wrong number of arguments. Try again.");
 					continue;
 				}
 				
-				float[] arg = getArgs(command);
+				float[] arg = getArgs(cmd);
 				
-				model.rotate(arg[1], arg[2], arg[3], arg[4]);
+				model.rotate(arg[0], arg[1], arg[2], arg[3]);
 
-			} else if ("W".equals(command[0])) {
-				if(command.length != 1){
+			} else if ("W".equals(cmd[0])) {
+				if(cmd.length != 1){
 					System.out.println("Wrong number of arguments. Try again.");
 					continue;
 				}
 				
 				try {
 					ModelIO.writeFile(model, outputfile);
+					System.out.println("File written to: " + outputfile);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -91,21 +92,19 @@ public class RayTracer {
 				System.out.println("Bad Command. Try again.");
 				continue;
 			}
+			model.printStats();
+			System.out.println("Done.");
 
 		}
 
 	}
 	
 	private static float[] getArgs(String[] args){
-		float[] floatArgs = new float[4];
+		float[] floatArgs = new float[args.length -1];
 		
-		floatArgs[1] = Float.parseFloat(args[1]);
-		floatArgs[2] = Float.parseFloat(args[2]);
-		floatArgs[3] = Float.parseFloat(args[3]);
-		
-		if(args[4] == null) return floatArgs;
-		
-		floatArgs[4] = Float.parseFloat(args[4]);
+		for(int i = 0; i < floatArgs.length; i++){
+			floatArgs[i] = Float.parseFloat(args[i+1]);
+		}
 		
 		return floatArgs;
 	}

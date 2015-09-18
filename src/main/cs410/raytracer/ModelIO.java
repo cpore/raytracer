@@ -72,6 +72,13 @@ public class ModelIO {
 
 		// read the header lines
 		while ((line = br.readLine()) != null) {
+			if((line.startsWith("property float") || line.startsWith("property double")) 
+					&& !(line.endsWith(" x") || line.endsWith(" X"))
+					&& !(line.endsWith(" y") || line.endsWith(" Y"))
+					&& !(line.endsWith(" z") || line.endsWith(" Z"))){
+				
+				continue;
+			}
 			// Save with the line
 			headerBuilder.append(line + "\n");
 
@@ -96,7 +103,7 @@ public class ModelIO {
 		while ((line = br.readLine()) != null) {
 
 			// Deal with the line
-			String[] parts = line.split("\\s");
+			String[] parts = line.trim().split("\\s+");
 
 			if (parts.length == 0) {
 				throw new InvalidFormatException("Empty line at line: " + lineIndex);
@@ -106,13 +113,13 @@ public class ModelIO {
 
 			for (int i = 0; i < indicies.length; i++) {
 				try {
-					indicies[i] = Integer.parseInt(parts[i]);
+					indicies[i] = Integer.parseInt(parts[i].trim());
 				} catch (NumberFormatException nfe) {
-					throw new InvalidFormatException("Bad index at line: " + lineIndex);
+					throw new InvalidFormatException("Bad index at line: " + lineIndex + ": " + line);
 				}
 
 				if (indicies[i] > numVerticies) {
-					throw new InvalidFormatException("Index out of range (" + indicies[i] + ") at line: " + lineIndex);
+					throw new InvalidFormatException("Index out of range (" + indicies[i] + ") at line: " + lineIndex + ": " + line);
 				}
 			}
 
@@ -140,28 +147,28 @@ public class ModelIO {
 		while ((line = br.readLine()) != null) {
 
 			// Deal with the line
-			String[] parts = line.split("\\s");
+			String[] parts = line.trim().split("\\s+");
 
 			if (parts.length == 0) {
-				throw new InvalidFormatException("Empty line at line: " + lineIndex);
+				throw new InvalidFormatException("Empty line at line: " + lineIndex + ": " + line);
 			}
 			// read the values from the line
 			try {
 				verticies[Model.x][col] = Float.parseFloat(parts[Model.x]);
 			} catch (NumberFormatException nfe) {
-				throw new InvalidFormatException("Bad x value at line: " + lineIndex);
+				throw new InvalidFormatException("Bad x value (" + parts[Model.x] + ") at line: " + lineIndex + ": " + line);
 			}
 
 			try {
 				verticies[Model.y][col] = Float.parseFloat(parts[Model.y]);
 			} catch (NumberFormatException nfe) {
-				throw new InvalidFormatException("Bad y value at line: " + lineIndex);
+				throw new InvalidFormatException("Bad y value (" + parts[Model.y] + ") at line: " + lineIndex + ": " + line);
 			}
 
 			try {
 				verticies[Model.z][col] = Float.parseFloat(parts[Model.z]);
 			} catch (NumberFormatException nfe) {
-				throw new InvalidFormatException("Bad z value at line: " + lineIndex);
+				throw new InvalidFormatException("Bad z value (" + parts[Model.z] + ")at line: " + lineIndex + ": " + line);
 			}
 
 			verticies[Model.w][col] = 1;

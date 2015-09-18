@@ -20,13 +20,15 @@ public class Model {
 	public float[] boundingBox;
 	public Face[] faces;
 
-	private Transform currTransform;
-
 	public Model(String fileHeader, float[][] verticies, Face[] faces){
 		this.fileHeader = fileHeader;
 		this.verticies = verticies;
 		this.faces = faces;
-		this.currTransform = getIdentityTransform();
+		updateStats();
+
+	}
+
+	private void updateStats() {
 		boundingBox = new float[6];
 		boundingBox[MIN_X] = Float.MAX_VALUE;
 		boundingBox[MAX_X] = Float.MIN_VALUE;
@@ -67,9 +69,8 @@ public class Model {
 		}
 
 		meanVertex = new Vector(totalx / verticies[1].length, totaly / verticies[1].length, totalz / verticies[1].length, 1);
-
 	}
-
+	
 	private Transform getScaleTransform(float sx, float sy, float sz){
 		float[][] scaleMatrix = new float[][]{
 			{ sx, 0, 0, 0 },
@@ -121,6 +122,7 @@ public class Model {
 	public void translate(float tx, float ty, float tz) {
 		Transform translateTransform = getTranslateTransform(tx, ty, tz);
 		translateTransform.apply(this);
+
 	}
 
 	private Transform createRotationMatrix(float rx, float ry, float rz){
@@ -173,6 +175,7 @@ public class Model {
 	}
 
 	public void printStats(){
+		updateStats();
 		System.out.println("Number of Verticies: " + verticies[1].length);
 
 		System.out.println("Number of Faces: " + faces.length);

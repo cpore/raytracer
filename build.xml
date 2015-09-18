@@ -4,22 +4,21 @@
 	<!-- The value of a property is accessed via ${} -->
 	<property name="src.dir" location="src/main" />
 	
-	<property name="test.dir" location="src/test" />
-
 	<property name="build.dir" location="bin" />
 
 	<property name="jar.dir" location="jar" />
 	
-	<property name="outputdir.property" value="src/models/output/"/>
-	<property name="classpath.property" value="${basedir}/com.my.namespace/path/to/thing"/>
+	<property name="outputdir.property" value="src/models/testoutput"/>
+	<property name="classpath.property" value="${basedir}/cs410.raytracer.RayTracer"/>
 
 	<!-- Variables used for JUnit testing -->
-	<property name="test.dir" location="src/test" />
+	
+	<property name="test.dir" location="src/models/medium" />
 	<property name="test.report.dir" location="src/testreport" />
 
 	<!-- Define the classpath which includes the junit.jar and the classes after compiling-->
 	<path id="junit.class.path">
-		<pathelement location="/home/cpore/eclipse/plugins/org.junit_4.12.0.v201504281640/junit.jar" />
+		<pathelement location="src/libs/junit-4.12.jar" />
 		<pathelement location="${build.dir}" />
 	</path>
 
@@ -48,9 +47,9 @@
 
 	<!--Creates the deployable jar file  -->
 	<target name="jar" depends="compile">
-		<jar destfile="${jar.dir}\de.vogella.build.test.ant.jar" basedir="${build.dir}">
+		<jar destfile="${jar.dir}\raytracer.jar" basedir="${build.dir}">
 			<manifest>
-				<attribute name="Main-Class" value="test.Main" />
+				<attribute name="Main-Class" value="cs410.raytracer.RayTracer" />
 			</manifest>
 		</jar>
 	</target>
@@ -59,11 +58,13 @@
 	<!-- Output is XML, could also be plain-->
 	<target name="junit" depends="compile">
 		<junit printsummary="on" fork="true" haltonfailure="no">
-			<classpath refid="junit.class.path" />
+			<classpath>
+			      <pathelement location="${junit.class.path}"/>
+			    </classpath>   
 			<formatter type="xml" />
 			<batchtest todir="${test.report.dir}">
 				<fileset dir="${test.dir}">
-					<include name="**/*Test*.java" />
+					<include name="**/*Test*" />
 				</fileset>
 			</batchtest>
 		</junit>
