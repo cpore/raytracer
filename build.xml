@@ -39,7 +39,7 @@
 
 	<!-- Compiles the java code (including the usage of library for JUnit -->
 	<target name="compile" depends="clean, makedir">
-		<javac includeantruntime="false" srcdir="${src.dir}" destdir="${build.dir}">
+		<javac fork="yes" includeantruntime="false" srcdir="${src.dir}" destdir="${build.dir}">
 			<classpath refid="junit.class.path" />
 		</javac>
 
