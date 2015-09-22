@@ -28,6 +28,7 @@
 		<delete dir="${build.dir}" />
 		<delete dir="${test.report.dir}" />
 		<delete dir="${jar.dir}" />
+		<delete file="PA1.tar" />
 	</target>
 
 	<!-- Creates the  build, docs and dist directory-->
@@ -52,6 +53,12 @@
 				<attribute name="Main-Class" value="cs410.raytracer.RayTracer" />
 			</manifest>
 		</jar>
+	</target>
+	
+	<target name="tar">
+	<tar destfile="${basedir}/PA1.tar"
+	     basedir="${basedir}"
+	     excludes="bin/**, .*, PA1.tar, src/test/**, src/models/**, src/testoutput/**, src/testreport/**, readme.md" />
 	</target>
 
 	<!-- Run the JUnit Tests -->
