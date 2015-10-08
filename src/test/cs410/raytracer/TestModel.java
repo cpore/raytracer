@@ -39,14 +39,14 @@ public class TestModel {
 	public void testScale() {
 
 		try {
-			Model model = ModelIO.readFile("src/models/small/pyramid.ply");
+			Model model = RayTracerIO.readModelFile("src/models/small/pyramid.ply");
 			model.scale(10f, 10f, 10f);
-			ModelIO.writeFile(model, "src/testoutput/pyramid_scaled10.ply");
+			RayTracerIO.writeModelFile(model, "src/testoutput/pyramid_scaled10.ply");
 
-			ModelIO.readFile("src/testoutput/pyramid_translated10.ply");
+			RayTracerIO.readModelFile("src/testoutput/pyramid_translated10.ply");
 
 			model.scale(-10f, -10f, -10f);
-			ModelIO.writeFile(model, "src/testoutput/dodecahedron_unscaled10.ply");
+			RayTracerIO.writeModelFile(model, "src/testoutput/dodecahedron_unscaled10.ply");
 
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
@@ -66,14 +66,14 @@ public class TestModel {
 	@Test
 	public void testTranslate() {
 		try {
-			Model model = ModelIO.readFile("src/models/small/pyramid.ply");
+			Model model = RayTracerIO.readModelFile("src/models/small/pyramid.ply");
 			model.translate(10f, 10f, 10f);
-			ModelIO.writeFile(model, "src/testoutput/pyramid_translated10.ply");
+			RayTracerIO.writeModelFile(model, "src/testoutput/pyramid_translated10.ply");
 
-			ModelIO.readFile("src/testoutput/pyramid_translated10.ply");
+			RayTracerIO.readModelFile("src/testoutput/pyramid_translated10.ply");
 
 			model.translate(-10f, -10f, -10f);
-			ModelIO.writeFile(model, "src/testoutput/dodecahedron_untranslated10.ply");
+			RayTracerIO.writeModelFile(model, "src/testoutput/dodecahedron_untranslated10.ply");
 
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
@@ -101,36 +101,36 @@ public class TestModel {
 	@Test
 	public void testRotate() {
 		try {
-			Model model = ModelIO.readFile("src/models/small/pyramid.ply");
+			Model model = RayTracerIO.readModelFile("src/models/small/pyramid.ply");
 			model.rotate(0f, 1f, 0f, 45);
-			ModelIO.writeFile(model, "src/testoutput/pyramid_rotated_y_45.ply");
+			RayTracerIO.writeModelFile(model, "src/testoutput/pyramid_rotated_y_45.ply");
 
-			model = ModelIO.readFile("src/models/small/pyramid.ply");
+			model = RayTracerIO.readModelFile("src/models/small/pyramid.ply");
 			model.rotate(0f, 1f, 0f, 90);
-			ModelIO.writeFile(model, "src/testoutput/pyramid_rotated_y_90.ply");
+			RayTracerIO.writeModelFile(model, "src/testoutput/pyramid_rotated_y_90.ply");
 
 			model.rotate(0f, 1f, 0f, -45);
-			ModelIO.writeFile(model, "src/testoutput/pyramid_unrotated_y_45.ply");
+			RayTracerIO.writeModelFile(model, "src/testoutput/pyramid_unrotated_y_45.ply");
 
-			model = ModelIO.readFile("src/models/small/pyramid.ply");
+			model = RayTracerIO.readModelFile("src/models/small/pyramid.ply");
 			model.rotate(0f, 1f, 0f, -360);
-			ModelIO.writeFile(model, "src/testoutput/pyramid_rotated_y_360.ply");
+			RayTracerIO.writeModelFile(model, "src/testoutput/pyramid_rotated_y_360.ply");
 
-			model = ModelIO.readFile("src/models/small/pyramid.ply");
+			model = RayTracerIO.readModelFile("src/models/small/pyramid.ply");
 			model.rotate(1f, 0f, 0f, 90);
-			ModelIO.writeFile(model, "src/testoutput/pyramid_rotated_x_90.ply");
+			RayTracerIO.writeModelFile(model, "src/testoutput/pyramid_rotated_x_90.ply");
 
-			model = ModelIO.readFile("src/models/medium/beethoven.ply");
+			model = RayTracerIO.readModelFile("src/models/medium/beethoven.ply");
 			model.rotate(0f, 1f, 0f, 90);
-			ModelIO.writeFile(model, "src/testoutput/beethoven_rotated_y_90.ply");
+			RayTracerIO.writeModelFile(model, "src/testoutput/beethoven_rotated_y_90.ply");
 
-			model = ModelIO.readFile("src/models/medium/beethoven.ply");
+			model = RayTracerIO.readModelFile("src/models/medium/beethoven.ply");
 			model.rotate(1f, 0f, 0f, 90);
-			ModelIO.writeFile(model, "src/testoutput/beethoven_rotated_x_90.ply");
+			RayTracerIO.writeModelFile(model, "src/testoutput/beethoven_rotated_x_90.ply");
 
-			model = ModelIO.readFile("src/models/large/bunny.ply");
+			model = RayTracerIO.readModelFile("src/models/large/bunny.ply");
 			model.rotate(0f, 1f, 0f, 90);
-			ModelIO.writeFile(model, "src/testoutput/bunny_rotated_y_90.ply");
+			RayTracerIO.writeModelFile(model, "src/testoutput/bunny_rotated_y_90.ply");
 
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
@@ -158,17 +158,17 @@ public class TestModel {
 	@Test
 	public void testWriteFile() {
 		try {
-			Model model = ModelIO.readFile("src/models/small/dodecahedron.txt");
-			ModelIO.writeFile(model, "src/testoutput/dodecahedron.ply");
+			Model model = RayTracerIO.readModelFile("src/models/small/dodecahedron.txt");
+			RayTracerIO.writeModelFile(model, "src/testoutput/dodecahedron.ply");
 
-			model = ModelIO.readFile("src/models/large/bunny.txt");
-			ModelIO.writeFile(model, "src/testoutput/bunny.ply");
+			model = RayTracerIO.readModelFile("src/models/large/bunny.txt");
+			RayTracerIO.writeModelFile(model, "src/testoutput/bunny.ply");
 
-			model = ModelIO.readFile("src/models/small/sphere.txt");
-			ModelIO.writeFile(model, "src/testoutput/shpere.ply");
+			model = RayTracerIO.readModelFile("src/models/small/sphere.txt");
+			RayTracerIO.writeModelFile(model, "src/testoutput/shpere.ply");
 
-			model = ModelIO.readFile("src/models/small/pyramid.ply");
-			ModelIO.writeFile(model, "src/testoutput/pyramid.ply");
+			model = RayTracerIO.readModelFile("src/models/small/pyramid.ply");
+			RayTracerIO.writeModelFile(model, "src/testoutput/pyramid.ply");
 
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
@@ -200,9 +200,9 @@ public class TestModel {
 			}
 			String filename = listOfFiles[i].getName();
 			try {
-				model = ModelIO.readFile(listOfFiles[i].getPath());
+				model = RayTracerIO.readModelFile(listOfFiles[i].getPath());
 				
-				ModelIO.writeFile(model, "src/testoutput/" + filename);
+				RayTracerIO.writeModelFile(model, "src/testoutput/" + filename);
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -236,11 +236,11 @@ public class TestModel {
 			}
 			String filename = listOfFiles[i].getName();
 			try {
-				model = ModelIO.readFile(listOfFiles[i].getPath());
+				model = RayTracerIO.readModelFile(listOfFiles[i].getPath());
 				
 				model.rotate(0, 0, 1, 90);
 				
-				ModelIO.writeFile(model, rotateDir.getPath() + File.separator + filename);
+				RayTracerIO.writeModelFile(model, rotateDir.getPath() + File.separator + filename);
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

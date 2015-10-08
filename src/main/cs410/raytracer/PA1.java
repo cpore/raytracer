@@ -3,10 +3,10 @@ package cs410.raytracer;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class RayTracer {
+public class PA1 {
 	
 
-	public RayTracer() {
+	public PA1() {
 
 	}
 
@@ -22,7 +22,7 @@ public class RayTracer {
 		
 		Model model = null;
 		try {
-			model = ModelIO.readFile(inputfile);
+			model = RayTracerIO.readModelFile(inputfile);
 		} catch (NumberFormatException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -79,7 +79,7 @@ public class RayTracer {
 				}
 				
 				try {
-					ModelIO.writeFile(model, outputfile);
+					RayTracerIO.writeModelFile(model, outputfile);
 					System.out.println("File written to: " + outputfile);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block

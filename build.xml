@@ -29,6 +29,7 @@
 		<delete dir="${test.report.dir}" />
 		<delete dir="${jar.dir}" />
 		<delete file="PA1.tar" />
+		<delete file="PA2.tar" />
 	</target>
 
 	<!-- Creates the  build, docs and dist directory-->
@@ -47,18 +48,27 @@
 	</target>
 
 	<!--Creates the deployable jar file  -->
-	<target name="jar" depends="compile">
+	<target name="pa1jar" depends="compile">
 		<jar destfile="${jar.dir}\raytracer.jar" basedir="${build.dir}">
 			<manifest>
-				<attribute name="Main-Class" value="cs410.raytracer.RayTracer" />
+				<attribute name="Main-Class" value="cs410.raytracer.PA1" />
 			</manifest>
 		</jar>
 	</target>
 	
-	<target name="tar">
+	<!--Creates the deployable jar file  -->
+		<target name="pa2jar" depends="compile">
+			<jar destfile="${jar.dir}\raytracer.jar" basedir="${build.dir}">
+				<manifest>
+					<attribute name="Main-Class" value="cs410.raytracer.PA2" />
+				</manifest>
+			</jar>
+		</target>
+	
+	<target name="PA1tar">
 	<tar destfile="${basedir}/PA1.tar"
 	     basedir="${basedir}"
-	     excludes="bin/**, .*, PA1.tar, src/test/**, src/models/**, src/testoutput/**, src/testreport/**, readme.md" />
+	     excludes="bin/**, .*, PA1.tar, src/test/**, src/models/**, src/testoutput/**, src/testreport/**, readme.md, src/libs/**" />
 	</target>
 
 	<!-- Run the JUnit Tests -->
