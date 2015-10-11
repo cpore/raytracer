@@ -29,7 +29,7 @@ public class RayTracerIO {
 
         float[][] verticies = readVerticies(br, numVerticies, lineIndex);
 
-        Face[] faces = readFaces(br, numFaces, numVerticies, lineIndex);
+        Face[] faces = readFaces(br, numFaces, numVerticies, lineIndex, verticies);
 
         br.close();
 
@@ -95,7 +95,7 @@ public class RayTracerIO {
     }
 
     private static Face[] readFaces(BufferedReader br, int numFaces, int numVerticies,
-            Integer lineIndex) throws IOException, InvalidFormatException {
+            Integer lineIndex, float[][] verticies) throws IOException, InvalidFormatException {
         Face[] faces = new Face[numFaces];
         int idx = 0;
 
@@ -111,10 +111,13 @@ public class RayTracerIO {
             }
 
             int[] indicies = new int[parts.length];
+            Vector[] vertexPoints = new Vector[indicies.length];
 
             for (int i = 0; i < indicies.length; i++) {
                 try {
                     indicies[i] = Integer.parseInt(parts[i].trim());
+                    vertexPoints[i] = new Vector(verticies[Vector.x][indicies[i]],
+                            verticies[Vector.y][indicies[i]], verticies[Vector.z][indicies[i]], 1);
                 } catch (NumberFormatException nfe) {
                     throw new InvalidFormatException(
                             "Bad index at line: " + lineIndex + ": " + line);
@@ -128,7 +131,7 @@ public class RayTracerIO {
 
             lineIndex++;
 
-            faces[idx++] = new Face(indicies);
+            faces[idx++] = new Face(indicies, vertexPoints);
 
             if (idx == numFaces)
                 break;
@@ -200,27 +203,27 @@ public class RayTracerIO {
 
         // read the fp line
         String line = br.readLine();
-        if (line == null){
+        if (line == null) {
             br.close();
             throw new InvalidFormatException("Bad first line in camera model file.");
         }
         String[] split = line.trim().split("\\s+");
-        if (split.length < 3){
+        if (split.length < 3) {
             br.close();
             throw new InvalidFormatException("Focal point line doesn't have three values.");
         }
         Vector fp = new Vector(Float.parseFloat(split[0]), Float.parseFloat(split[1]),
                 Float.parseFloat(split[2]), 1);
 
-        //read the look at point line
+        // read the look at point line
         line = br.readLine();
-        if (line == null){
+        if (line == null) {
             br.close();
-        
+
             throw new InvalidFormatException("Bad second line in camera model file.");
         }
         split = line.trim().split("\\s+");
-        if (split.length < 3){
+        if (split.length < 3) {
             br.close();
             throw new InvalidFormatException("Look-at point line doesn't have three values.");
         }
@@ -229,21 +232,21 @@ public class RayTracerIO {
 
         // read the VUP line
         line = br.readLine();
-        if (line == null){
+        if (line == null) {
             br.close();
             throw new InvalidFormatException("Bad third line in camera model file.");
         }
         split = line.trim().split("\\s+");
-        if (split.length < 3){
+        if (split.length < 3) {
             br.close();
             throw new InvalidFormatException("VUP line doesn't have three values.");
         }
         Vector vup = new Vector(Float.parseFloat(split[0]), Float.parseFloat(split[1]),
                 Float.parseFloat(split[2]), 1);
 
-        //read focal length
+        // read focal length
         line = br.readLine();
-        if (line == null){
+        if (line == null) {
             br.close();
             throw new InvalidFormatException("Bad fourth line in camera model file.");
         }
@@ -251,12 +254,12 @@ public class RayTracerIO {
 
         // read min/max values for u/v
         line = br.readLine();
-        if (line == null){
+        if (line == null) {
             br.close();
             throw new InvalidFormatException("Bad fifth line in camera model file.");
         }
         split = line.trim().split("\\s+");
-        if (split.length < 4){
+        if (split.length < 4) {
             br.close();
             throw new InvalidFormatException("u/v coordinates line doesn't have four values.");
         }
@@ -264,24 +267,25 @@ public class RayTracerIO {
         int minv = Integer.parseInt(split[1]);
         int maxu = Integer.parseInt(split[2]);
         int maxv = Integer.parseInt(split[3]);
-        
+
         br.close();
-        
-        
-        //focal length 0?
-        if(d == 0){
+
+        // focal length 0?
+        if (d == 0) {
             throw new InvalidFormatException("Focal length cannot be zero.");
         }
-        if(minu >= maxu){
-            throw new InvalidFormatException("Min u coordinate must be less than max u coordinate.");
+        if (minu >= maxu) {
+            throw new InvalidFormatException(
+                    "Min u coordinate must be less than max u coordinate.");
         }
-        
-        if(minv >= maxv){
-            throw new InvalidFormatException("Min v coordinate must be less than max v coordinate.");
+
+        if (minv >= maxv) {
+            throw new InvalidFormatException(
+                    "Min v coordinate must be less than max v coordinate.");
         }
-        
-        //TODO check for other bad camera values
-        
+
+        // TODO check for other bad camera values
+
         return new CameraModel(fp, lap, vup, d, minu, minv, maxu, maxv);
 
     }

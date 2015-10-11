@@ -7,8 +7,18 @@ public class RGB {
     public final static int b = 2;
     int[] rgb;
     
+    /**
+     * Creates a new black pixel
+     */
     public RGB(){
         rgb = new int[3];
+    }
+    
+    public RGB(int r, int g, int b){
+        rgb = new int[3];
+        rgb[RGB.r] = r;
+        rgb[RGB.g] = g;
+        rgb[RGB.b] = b;
     }
     
     @Override

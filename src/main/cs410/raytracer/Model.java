@@ -34,6 +34,20 @@ public class Model {
 		updateStats();
 
 	}
+	
+	public void combine(Model m){
+	    float[][] verticies =  new float[4][this.verticies[0].length + m.verticies[0].length];
+	    System.arraycopy(this.verticies, 0, verticies, 0, this.verticies.length);
+	    System.arraycopy(m.verticies, 0, verticies, this.verticies.length, m.verticies.length);
+	           
+	    Face[] faces = new Face[this.faces.length + m.faces.length];
+	    System.arraycopy(this.faces, 0, faces, 0, this.faces.length);
+	    System.arraycopy(m.faces, 0, faces, this.faces.length, m.faces.length);
+	    
+	    updateStats();
+	    
+	    
+	}
 
 	private void updateStats() {
 		boundingBox = new float[6];
@@ -196,8 +210,14 @@ public class Model {
 		System.out.println("\tMax Y: " + Utils.prettyPrint(boundingBox[MAX_Y]));
 		System.out.println("\tMin Z: " + Utils.prettyPrint(boundingBox[MIN_Z]));
 		System.out.println("\tMax Z: " + Utils.prettyPrint(boundingBox[MAX_Z]));
+		
+		float x = boundingBox[MIN_X] + boundingBox[MAX_X] / 2;
+		float y = boundingBox[MIN_Y] + boundingBox[MAX_Y] / 2;
+		float z = boundingBox[MIN_Z] + boundingBox[MAX_Z] / 2;
+		
+		System.out.println("Bounding box center: " + new Vector(x, y, z, 1).toString());
 	}
-
+	
 
 	@Override
 	public int hashCode() {

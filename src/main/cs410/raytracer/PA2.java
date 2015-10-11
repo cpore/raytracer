@@ -58,17 +58,16 @@ public class PA2 {
 		}
 		
 		
-		Image image = new Image(cameraModel.getHeight(), cameraModel.getWidth());
-		ViewModel viewModel = new ViewModel(models, cameraModel, image);
+		ViewModel viewModel = new ViewModel(models, cameraModel);
 		
 		System.out.println("Running ray tracer...");
 		
-		//TODO the ray tracing!!
+		viewModel.rayTrace();
 		
 		System.out.println("Ray tracer finished.\nWriting image file...");
 		
 		try {
-            image.writeToFile(outputfile);
+            viewModel.writeImageToFile(outputfile);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

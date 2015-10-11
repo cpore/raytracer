@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Image {
     
-    private RGB[][] pixels;
+    RGB[][] pixels;
     
     public Image(int height, int width){
         pixels = new RGB[height][width];
@@ -19,7 +19,7 @@ public class Image {
     public int getWidth(){
         return pixels[0].length;
     }
-    
+       
     
     public void writeToFile(String outputfile) throws IOException{
         FileWriter fw = new FileWriter(new File(outputfile));
