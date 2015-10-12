@@ -1,1 +1,1 @@
-java -jar ./jar/raytracer.jar $1 $2
+java -jar ./jar/pa1.jar $1 $2

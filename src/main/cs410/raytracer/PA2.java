@@ -16,7 +16,7 @@ public class PA2 {
 		}
 
 		String camerafile = args[0];
-		String outputfile = args[args.length];
+		String outputfile = args[args.length-1];
 		
 		System.out.println("Reading Camera Model...");
         CameraModel cameraModel = null;
@@ -64,10 +64,11 @@ public class PA2 {
 		
 		viewModel.rayTrace();
 		
-		System.out.println("Ray tracer finished.\nWriting image file...");
+		System.out.println("Ray tracer finished.\nWriting image file: " + outputfile);
 		
 		try {
             viewModel.writeImageToFile(outputfile);
+            System.out.println("Done.");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

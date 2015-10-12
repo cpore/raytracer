@@ -49,7 +49,7 @@
 
 	<!--Creates the deployable jar file  -->
 	<target name="pa1jar" depends="compile">
-		<jar destfile="${jar.dir}\raytracer.jar" basedir="${build.dir}">
+		<jar destfile="${jar.dir}\pa1.jar" basedir="${build.dir}">
 			<manifest>
 				<attribute name="Main-Class" value="cs410.raytracer.PA1" />
 			</manifest>
@@ -58,7 +58,7 @@
 	
 	<!--Creates the deployable jar file  -->
 		<target name="pa2jar" depends="compile">
-			<jar destfile="${jar.dir}\raytracer.jar" basedir="${build.dir}">
+			<jar destfile="${jar.dir}\pa2.jar" basedir="${build.dir}">
 				<manifest>
 					<attribute name="Main-Class" value="cs410.raytracer.PA2" />
 				</manifest>
@@ -87,19 +87,7 @@
 		</junit>
 	</target>
 
-	<target name="run">
-
-		<path id="runtime.path">
-			<fileset dir="${classpath.property}" includes="*.jar"/>
-		</path>
-		<echo message = "Ant output directory: ${outputdir.property}"/>
-		<echo message = "Ant input directory for tutorials: ${inputdir.property}"/>
-		<echo message = "Ant classpath directory: ${classpath.property}"/>
-		<java classname="my.namespace.ClassName" fork="false" classpathref="runtime.path">
-			<arg value="${outputdir.property}"/>
-			<arg value="${inputdir.property}"/>
-		</java>
-	</target>
+	
 
 	<target name="main" depends="compile, junit">
 		<description>Main target</description>

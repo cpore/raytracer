@@ -37,12 +37,29 @@ public class Model {
 	
 	public void combine(Model m){
 	    float[][] verticies =  new float[4][this.verticies[0].length + m.verticies[0].length];
-	    System.arraycopy(this.verticies, 0, verticies, 0, this.verticies.length);
-	    System.arraycopy(m.verticies, 0, verticies, this.verticies.length, m.verticies.length);
+	    //copy first part
+	    for(int i = 0; i < this.verticies[0].length; i++){
+	        verticies[0][i] = this.verticies[0][i];
+	        verticies[1][i] = this.verticies[1][i];
+	        verticies[2][i] = this.verticies[2][i];
+	        verticies[3][i] = this.verticies[3][i];
+	    }
+	    
+	    //copy second part
+	    for(int i = this.verticies[0].length; i< verticies[0].length; i++){
+            verticies[0][i] = m.verticies[0][i];
+            verticies[1][i] = m.verticies[1][i];
+            verticies[2][i] = m.verticies[2][i];
+            verticies[3][i] = m.verticies[3][i];
+        }
+	    
+	    this.verticies = verticies;
 	           
 	    Face[] faces = new Face[this.faces.length + m.faces.length];
 	    System.arraycopy(this.faces, 0, faces, 0, this.faces.length);
 	    System.arraycopy(m.faces, 0, faces, this.faces.length, m.faces.length);
+	    
+	    this.faces = faces;
 	    
 	    updateStats();
 	    
@@ -211,11 +228,12 @@ public class Model {
 		System.out.println("\tMin Z: " + Utils.prettyPrint(boundingBox[MIN_Z]));
 		System.out.println("\tMax Z: " + Utils.prettyPrint(boundingBox[MAX_Z]));
 		
-		float x = boundingBox[MIN_X] + boundingBox[MAX_X] / 2;
-		float y = boundingBox[MIN_Y] + boundingBox[MAX_Y] / 2;
-		float z = boundingBox[MIN_Z] + boundingBox[MAX_Z] / 2;
+		float x = (boundingBox[MIN_X] + boundingBox[MAX_X]) / 2;
+		float y = (boundingBox[MIN_Y] + boundingBox[MAX_Y]) / 2;
+		float z = (boundingBox[MIN_Z] + boundingBox[MAX_Z]) / 2;
 		
 		System.out.println("Bounding box center: " + new Vector(x, y, z, 1).toString());
+		System.out.println();
 	}
 	
 

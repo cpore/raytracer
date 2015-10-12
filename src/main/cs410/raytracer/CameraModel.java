@@ -12,7 +12,11 @@ public class CameraModel {
 
     float d; // focal length
     
-    float fpdn;
+    Vector fpdn;
+    
+    Vector U; // the x axis in the basis
+    Vector V; // the y axis in the basis
+    Vector W; // the z axis in the basis
 
     int minu, minv, maxu, maxv; // max/min coordinates of the view plane
 
@@ -28,7 +32,11 @@ public class CameraModel {
         this.maxu = maxu;
         this.maxv = maxv;
         
-        this.fpdn =  fp.p[Vector.z] + d;
+        W = lap.subtract(fp).getNormal();
+        U = W.crossProduct(vup).getNormal();
+        V = W.crossProduct(U).getNormal();
+        
+        this.fpdn =  fp.add(W.multiply(d));
         
         this.image = new Image(getHeight(), getWidth());
         
@@ -36,12 +44,12 @@ public class CameraModel {
     
     public int getWidth(){
         // TODO is u width or height?
-        return Math.abs(minu) + Math.abs(maxu);
+        return Math.abs(minu) + Math.abs(maxu) + 1;
     }
     
     public int getHeight(){
         // TODO is v width or height?
-        return Math.abs(minv) + Math.abs(maxv);
+        return Math.abs(minv) + Math.abs(maxv) + 1;
     }
     
     public void fillPixel(int u, int v, RGB color){
@@ -52,8 +60,13 @@ public class CameraModel {
     }
     
     public Vector getPixelPoint(int u, int v){
+        //float u = (float) (((float)minu + ((float)maxu-(float)minu) * ((float)i+0.5)) / (float)getWidth());
+        //float v = (float) (((float)minv + ((float)maxv-(float)minv) * ((float)j+0.5)) / (float)getHeight());
         
-        return new Vector(u, v, fpdn, 1);
+        Vector uU = U.multiply(u);
+        Vector vV = V.multiply(v);
+        
+        return fpdn.add(uU.add(vV));
     }
 
     public Vector getUnit(Vector L) {
