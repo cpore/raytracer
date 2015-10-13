@@ -101,7 +101,7 @@ public class ViewModel {
         float nDotL = f.N.dotProduct(L);
         //System.out.println("nDotL = " + nDotL);
         if(nDotU == 0 || Float.isNaN(nDotU)) return null;
-        float t = (d-nDotL) / (nDotU);
+        float t = (-(d + nDotL)) / (nDotU);
        
         if(Float.isNaN(t) || Float.isInfinite(t)) System.out.println("t = " + t);
         //t must be > 1 to use

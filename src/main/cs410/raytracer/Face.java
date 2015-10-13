@@ -24,8 +24,13 @@ public class Face {
             a = verticies[i];
             b = verticies[i+1];
             c = verticies[i+2];
+            
             N = getN(a, b, c);
             if(N != null) break;
+            
+            //System.out.print("a = " + a.toString() + ", ");
+            //System.out.print("b = " + b.toString() + ", ");
+            //System.out.println("c = " + c.toString());
             
         }
         
@@ -42,10 +47,10 @@ public class Face {
 	    
 	    Vector abPlusBc = ab.add(bc);
 	    
-	    //System.out.println("abPlusBc = " + abPlusBc.toString());
+	   //System.out.println("abPlusBc = " + abPlusBc.toString());
 	    //System.out.println("ac = " + ac.toString());
 	    
-	    if(abPlusBc.equalTo(ac)) return null;
+	    //if(abPlusBc.equalTo(ac)) return null;
 	    
 	    Vector n = ab.crossProduct(bc);
 	    

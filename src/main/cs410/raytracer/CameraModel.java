@@ -32,11 +32,26 @@ public class CameraModel {
         this.maxu = maxu;
         this.maxv = maxv;
         
-        W = lap.subtract(fp).getNormal()/*.multiply(-1)*/;
-        U = W.crossProduct(vup).getNormal();
+        System.out.println("FP = " + fp);
+        System.out.println("lap = " + lap);
+        System.out.println("vup = " + vup);
+        System.out.println("d = " + d);
+        System.out.println("minu = " + minu);
+        System.out.println("minv = " + minv);
+        System.out.println("maxu = " + maxu);
+        System.out.println("maxv = " + maxv);
+        
+        W = lap.subtract(fp).getNormal();
+        U = vup.crossProduct(W).getNormal();
         V = W.crossProduct(U).getNormal();
         
-        this.fpdn =  fp.add(W.multiply(-d));
+        System.out.println("W = " + W.toString());
+        System.out.println("U = " + U.toString());
+        System.out.println("V = " + V.toString());
+        
+        this.fpdn =  fp.add(W.multiply(d));
+        
+        System.out.println("fpdn = " + fpdn.toString());
         
         this.image = new Image(getHeight(), getWidth());
         

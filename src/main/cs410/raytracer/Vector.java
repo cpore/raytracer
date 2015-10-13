@@ -1,7 +1,7 @@
 package cs410.raytracer;
 
 public class Vector {
-    final float EPSILON = 0.0001f;
+    final float EPSILON = 0.00001f;
     public static final int x = 0;
     public static final int y = 1;
     public static final int z = 2;
@@ -38,7 +38,8 @@ public class Vector {
      * @param v
      */
     public Vector subtract(Vector v) {
-        return new Vector(p[x] - (-v.p[x]), p[y] - (-v.p[y]), p[z] - (-v.p[z]), p[w]);
+        Vector newV = v.multiply(-1);
+        return new Vector(p[x] + newV.p[x], p[y]  + newV.p[y], p[z] + newV.p[z], p[w]);
     }
 
     /**
