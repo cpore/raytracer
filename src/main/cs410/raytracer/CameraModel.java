@@ -32,23 +32,21 @@ public class CameraModel {
         this.maxu = maxu;
         this.maxv = maxv;
         
-        W = lap.subtract(fp).getNormal();
+        W = lap.subtract(fp).getNormal()/*.multiply(-1)*/;
         U = W.crossProduct(vup).getNormal();
         V = W.crossProduct(U).getNormal();
         
-        this.fpdn =  fp.add(W.multiply(d));
+        this.fpdn =  fp.add(W.multiply(-d));
         
         this.image = new Image(getHeight(), getWidth());
         
     }
     
     public int getWidth(){
-        // TODO is u width or height?
         return Math.abs(minu) + Math.abs(maxu) + 1;
     }
     
     public int getHeight(){
-        // TODO is v width or height?
         return Math.abs(minv) + Math.abs(maxv) + 1;
     }
     
@@ -70,9 +68,7 @@ public class CameraModel {
     }
 
     public Vector getUnit(Vector L) {
-        Vector E = fp;
-        
-        Vector unit = L.subtract(E);
+        Vector unit = L.subtract(fp);
         unit.normalize();
         return unit;
     }

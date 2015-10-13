@@ -1,6 +1,7 @@
 package cs410.raytracer;
 
 public class Vector {
+    final float EPSILON = 0.0001f;
     public static final int x = 0;
     public static final int y = 1;
     public static final int z = 2;
@@ -126,7 +127,10 @@ public class Vector {
     }
     
     public boolean equalTo(Vector v){
-        return p[x] == v.p[x] && p[y] == v.p[y] && p[z] == v.p[z];
+        boolean xe = Math.abs(p[x] - v.p[x]) < EPSILON;
+        boolean ye = Math.abs(p[y] - v.p[y]) < EPSILON;
+        boolean ze = Math.abs(p[z] - v.p[z]) < EPSILON;
+        return xe && ye && ze;
     }
     
 

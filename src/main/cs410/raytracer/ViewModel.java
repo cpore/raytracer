@@ -53,17 +53,20 @@ public class ViewModel {
 
                     Vector P = getPointOfIntersection(L, U, f);
                     
+                    
                     // the point of intersection is inside of or behind the camera, so ignore
                     if(P == null){
                         continue;
                     }
 
+                                       
                     //System.out.println(P.toString());
                     hit = intersects(P, f);
                     
                     //we know this pixel hit at least one face,
                     //so we don't need to check the rest of the faces
                     if(hit){
+                        //System.out.println("POI: " + P.toString()); 
                         //System.out.println("Hit!");
                         break;
                     }
@@ -73,7 +76,7 @@ public class ViewModel {
                 //Calculate color along ray
 
                 //Fill in pixel
-                RGB color =  hit ? new RGB(255, 255, 255) : new RGB();
+                RGB color =  hit ? new RGB(255, 255, 255) : new RGB(0, 0, 0);
                 cameraModel.fillPixel(u, v, color);
                 
                 //update progress
@@ -90,18 +93,19 @@ public class ViewModel {
 
     private Vector getPointOfIntersection(Vector L, Vector U, Face f){
         // find the point of intersection (P) of the plane this face is in
-        float d = -f.N.dotProduct(f.verticies[0]);
+        float d = f.N.dotProduct(f.verticies[0]);
         //d = Math.abs(d);
         
-        // TODO what if this is zero?
+        // what if this is zero?
+        float nDotU = f.N.dotProduct(U);
         float nDotL = f.N.dotProduct(L);
         //System.out.println("nDotL = " + nDotL);
-        if(nDotL == 0 || Float.isNaN(nDotL)) return null;
-        float t = (d - nDotL) / (nDotL);
+        if(nDotU == 0 || Float.isNaN(nDotU)) return null;
+        float t = (d-nDotL) / (nDotU);
        
-        //System.out.println("t = " + t);
+        if(Float.isNaN(t) || Float.isInfinite(t)) System.out.println("t = " + t);
         //t must be > 1 to use
-        if(t <= 1 || Float.isNaN(t)) return null;
+        if(t <= 1.0f || Float.isNaN(t)) return null;
         
         Vector P = L.add(U.multiply(t));
         return P;
@@ -120,7 +124,7 @@ public class ViewModel {
             
             float result = f.N.dotProduct(Np);
             //System.out.println("result = " + result);
-            if(result < 0) return false;
+            if(result < 0.0f) return false;
 
         }
 

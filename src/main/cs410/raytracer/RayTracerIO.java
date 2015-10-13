@@ -118,6 +118,7 @@ public class RayTracerIO {
                     indicies[i] = Integer.parseInt(parts[i].trim());
                     vertexPoints[i] = new Vector(verticies[Vector.x][indicies[i]],
                             verticies[Vector.y][indicies[i]], verticies[Vector.z][indicies[i]], 1);
+                    //System.out.println(vertexPoints[i].toString());
                 } catch (NumberFormatException nfe) {
                     throw new InvalidFormatException(
                             "Bad index at line: " + lineIndex + ": " + line);

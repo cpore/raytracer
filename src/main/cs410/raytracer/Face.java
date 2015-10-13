@@ -1,8 +1,9 @@
 package cs410.raytracer;
 
 public class Face {
+    
 	
-	public int[] vertexIndicies;
+	int[] vertexIndicies;
 	
 	Vector[] verticies;
 	Vector N;
@@ -29,7 +30,6 @@ public class Face {
         }
         
         if(N == null){
-            
             throw new InvalidFormatException("All Vertices for face are collinear");
         }
         
