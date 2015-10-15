@@ -2,8 +2,8 @@ CS410 Ray Tracer - Casey Pore
 
 Building
 ------------
-In the root of the project folder (named raytracer) simply type 'ant jar' at the command line.
-This will create a runnable jar file in the raytracer/jar folder.
+In the root of the project folder (the folder in which you extracted the tar),
+simply type 'ant jar' at the command line. This will create a runnable jar file in the jar folder.
 
 Note that Ant is used to build a jar file. If you have problem building, it is
 probably because your JAVA_HOME environment variable is setup incorrectly. If 

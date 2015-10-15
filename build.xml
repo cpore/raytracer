@@ -5,7 +5,7 @@
 	<property name="src.dir" location="src/main" />
 	
 	<property name="build.dir" location="bin" />
-
+	
 	<property name="jar.dir" location="jar" />
 	
 	<property name="outputdir.property" value="src/models/testoutput"/>
