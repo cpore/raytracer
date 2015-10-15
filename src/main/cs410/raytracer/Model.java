@@ -35,7 +35,7 @@ public class Model {
 
 	}
 	
-	public void combine(Model m){
+	/*public void combine(Model m){
 	    float[][] verticies =  new float[4][this.verticies[0].length + m.verticies[0].length];
 	    //copy first part
 	    for(int i = 0; i < this.verticies[0].length; i++){
@@ -64,7 +64,7 @@ public class Model {
 	    updateStats();
 	    
 	    
-	}
+	}*/
 
 	private void updateStats() {
 		boundingBox = new float[6];
@@ -89,19 +89,20 @@ public class Model {
 			// check for min/max values
 			if(v.p[x] < boundingBox[MIN_X]){
 				boundingBox[MIN_X] = v.p[x];
-			}else if(v.p[x] > boundingBox[MAX_X]){
+			}
+			if(v.p[x] > boundingBox[MAX_X]){
 				boundingBox[MAX_X] = v.p[x];
 			}
-
 			if(v.p[y] < boundingBox[MIN_Y]){
 				boundingBox[MIN_Y] = v.p[y];
-			}else if(v.p[y] > boundingBox[MAX_Y]){
+			}
+			if(v.p[y] > boundingBox[MAX_Y]){
 				boundingBox[MAX_Y] = v.p[y];
 			}
-
 			if(v.p[z] < boundingBox[MIN_Z]){
 				boundingBox[MIN_Z] = v.p[z];
-			}else if(v.p[z] > boundingBox[MAX_Z]){
+			}
+			if(v.p[z] > boundingBox[MAX_Z]){
 				boundingBox[MAX_Z] = v.p[z];
 			}
 		}

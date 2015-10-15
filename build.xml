@@ -57,10 +57,10 @@
 	</target>
 	
 	<!--Creates the deployable jar file  -->
-		<target name="pa2jar" depends="compile">
-			<jar destfile="${jar.dir}\pa2.jar" basedir="${build.dir}">
+		<target name="jar" depends="compile">
+			<jar destfile="${jar.dir}\raytracer.jar" basedir="${build.dir}">
 				<manifest>
-					<attribute name="Main-Class" value="cs410.raytracer.PA2" />
+					<attribute name="Main-Class" value="cs410.raytracer.RayTracer" />
 				</manifest>
 			</jar>
 		</target>
@@ -70,6 +70,12 @@
 	     basedir="${basedir}"
 	     excludes="bin/**, .*, PA1.tar, src/test/**, src/models/**, src/testoutput/**, src/testreport/**, readme.md, src/libs/**" />
 	</target>
+	
+	<target name="PA2tar">
+		<tar destfile="${basedir}/PA2.tar"
+		     basedir="${basedir}"
+		     excludes="src/cameramodels/** jar/**, bin/**, .*, PA1.tar, PA2.tar, src/test/**, src/models/**, src/testoutput/**, src/testreport/**, readme.md, src/libs/**" />
+		</target>
 
 	<!-- Run the JUnit Tests -->
 	<!-- Output is XML, could also be plain-->

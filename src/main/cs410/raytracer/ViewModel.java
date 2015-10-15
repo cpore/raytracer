@@ -6,30 +6,12 @@ import java.util.HashSet;
 public class ViewModel {
 
     private HashSet<Model> modelSet;
-    private Model fullModel;
     private CameraModel cameraModel;
-
 
 
     public ViewModel(HashSet<Model> modelSet, CameraModel cameraModel) {
         this.modelSet = modelSet;
         this.cameraModel = cameraModel;
-        this.fullModel = new Model("Full Model\n", new float[4][0], new Face[0]);
-
-        if(modelSet.size() > 1) System.out.println("Combing models...");
-        for(Model m: modelSet){
-            fullModel.combine(m);
-        }
-
-        System.out.println("Model stats:");
-        fullModel.printStats();
-       /* try {
-            fullModel.fileHeader = ((Model) modelSet.toArray()[0]).fileHeader;
-            RayTracerIO.writeModelFile(fullModel, "/home/cpore/workspace/raytracer/sphere.ply");
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }*/
 
     }
 
@@ -48,44 +30,47 @@ public class ViewModel {
                 Vector U = cameraModel.getUnit(L);
 
                 boolean hit = false;
-                
-                for(Face f: fullModel.faces){
 
-                    Vector P = getPointOfIntersection(L, U, f);
-                    
-                    
-                    // the point of intersection is inside of or behind the camera, so ignore
-                    if(P == null){
-                        continue;
+                for(Model m: modelSet){
+                    for(Face f: m.faces){
+
+                        Vector P = getPointOfIntersection(L, U, f);
+
+                        // the point of intersection is inside of or behind the camera, so ignore
+                        if(P == null){
+                            continue;
+                        }
+
+                        //System.out.println(P.toString());
+                        hit = intersects(P, f);
+
+                        //we know this pixel hit at least one face,
+                        //so we don't need to check the rest of the faces
+                        if(hit){
+                            //System.out.println("POI: " + P.toString()); 
+                            break;
+                        }
                     }
-
-                                       
-                    //System.out.println(P.toString());
-                    hit = intersects(P, f);
-                    
-                    //we know this pixel hit at least one face,
-                    //so we don't need to check the rest of the faces
+                    //we know this pixel hit at least one face in this model,
+                    //so we don't need to check the rest of the models
                     if(hit){
-                        //System.out.println("POI: " + P.toString()); 
-                        //System.out.println("Hit!");
                         break;
                     }
-                    
                 }
-                
                 //Calculate color along ray
 
                 //Fill in pixel
                 RGB color =  hit ? new RGB(255, 255, 255) : new RGB(0, 0, 0);
                 cameraModel.fillPixel(u, v, color);
-                
-                //update progress
-                int newPct = (int) (((float)pixelCounter / (float)totalPixels) * 100f);
-                if(newPct > pct+5){
-                    pct = newPct-1;
-                    System.out.println("Working... " + (pct) + "% Complete.");
-                }
-                
+
+
+            }
+            //update progress
+            int newPct = (int) (((float)pixelCounter / (float)totalPixels) * 100f);
+            if(newPct > pct+5){
+                pct = newPct-1;
+                System.out.println("Working... " + (pct) + "% Complete.");
+
             }
         }
         System.out.println("Finished... 100% Complete.");
@@ -93,20 +78,41 @@ public class ViewModel {
 
     private Vector getPointOfIntersection(Vector L, Vector U, Face f){
         // find the point of intersection (P) of the plane this face is in
-        float d = f.N.dotProduct(f.verticies[0]);
+        float d = -f.N.dotProduct(f.verticies[0]);
         //d = Math.abs(d);
-        
+
         // what if this is zero?
         float nDotU = f.N.dotProduct(U);
         float nDotL = f.N.dotProduct(L);
-        //System.out.println("nDotL = " + nDotL);
-        if(nDotU == 0 || Float.isNaN(nDotU)) return null;
-        float t = (-(d + nDotL)) / (nDotU);
-       
-        if(Float.isNaN(t) || Float.isInfinite(t)) System.out.println("t = " + t);
-        //t must be > 1 to use
-        if(t <= 1.0f || Float.isNaN(t)) return null;
+
+       /* if(Float.compare(nDotU, 0.0f) == 0){
+            //System.out.println("nDotU = " + nDotU);
+            return null;
+        }*/
         
+        if(nDotU == 0.0f){
+            //System.out.println("nDotU = " + nDotU);
+            return null;
+        }
+
+        if(Float.isNaN(nDotU)){
+            //System.out.println("nDotU = " + nDotU);
+            return null;
+        }
+
+        float t = (-(d + nDotL)) / (nDotU);
+
+        //if(Float.isNaN(t) || Float.isInfinite(t)) System.out.println("t = " + t);
+        //t must be > 1 to use
+       /* if(Float.compare(t, 1.0f) <= 0 || Float.isNaN(t)){
+            //System.out.println("t = " + t);
+            return null;
+        }*/
+        if(t <= 1.0f || Float.isNaN(t)){
+            //System.out.println("t = " + t);
+            return null;
+        }
+
         Vector P = L.add(U.multiply(t));
         return P;
     }
@@ -115,16 +121,25 @@ public class ViewModel {
         // determine if the point lies inside the polygon
         int length = f.verticies.length;
         for(int i = 0; i < length; i++){
-            Vector V1 = f.verticies[i];
-            Vector V2 = f.verticies[(i+1) % length];
-            Vector e1 = V2.subtract(V1);
-            Vector epv1 = P.subtract(V1);
+            Vector A = f.verticies[i];
+            Vector B = f.verticies[(i+1) % length];
+            //Vector C = f.verticies[(i+2) % length];
+            Vector e1 = B.subtract(A);
+            //Vector e2 = C.subtract(B);
+            Vector epv1 = P.subtract(A);
+
+            //Vector N = e1.crossProduct(e2);
 
             Vector Np = e1.crossProduct(epv1);
-            
+
             float result = f.N.dotProduct(Np);
             //System.out.println("result = " + result);
-            if(result < 0.0f) return false;
+            //if(result < 0.0f) return false;
+
+            // if result >= 0 it is on the correct side
+            //if(Float.compare(result, 0.0f) < 0) return false;
+            //give it some leeway to fill holes
+            if(result < -0.01) return false;
 
         }
 

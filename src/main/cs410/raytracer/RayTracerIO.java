@@ -110,15 +110,16 @@ public class RayTracerIO {
                 throw new InvalidFormatException("Empty line at line: " + lineIndex);
             }
 
-            int[] indicies = new int[parts.length];
-            Vector[] vertexPoints = new Vector[indicies.length];
+            int length = Integer.parseInt(parts[0]);
+            int[] indicies = new int[length];
+            Vector[] vertexPoints = new Vector[length];
 
             for (int i = 0; i < indicies.length; i++) {
                 try {
-                    indicies[i] = Integer.parseInt(parts[i].trim());
+                    indicies[i] = Integer.parseInt(parts[i+1].trim());
                     vertexPoints[i] = new Vector(verticies[Vector.x][indicies[i]],
                             verticies[Vector.y][indicies[i]], verticies[Vector.z][indicies[i]], 1);
-                    //System.out.println(vertexPoints[i].toString());
+                    //System.out.print(indicies[i] + " ");
                 } catch (NumberFormatException nfe) {
                     throw new InvalidFormatException(
                             "Bad index at line: " + lineIndex + ": " + line);
@@ -128,7 +129,9 @@ public class RayTracerIO {
                     throw new InvalidFormatException("Index out of range (" + indicies[i]
                             + ") at line: " + lineIndex + ": " + line);
                 }
+                
             }
+            //System.out.println();
 
             lineIndex++;
 
@@ -283,6 +286,16 @@ public class RayTracerIO {
         if (minv >= maxv) {
             throw new InvalidFormatException(
                     "Min v coordinate must be less than max v coordinate.");
+        }
+        
+        if (fp.equals(lap)) {
+            throw new InvalidFormatException(
+                    "The focal point is equal to the look-at-point (or within an epsilon of 0.00001).");
+        }
+        
+        if (vup.getMagnitude() == 0.0f) {
+            throw new InvalidFormatException(
+                    "VUP has 0 magnitude.");
         }
 
         // TODO check for other bad camera values

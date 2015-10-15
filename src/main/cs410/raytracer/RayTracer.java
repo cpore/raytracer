@@ -3,10 +3,10 @@ package cs410.raytracer;
 import java.io.IOException;
 import java.util.HashSet;
 
-public class PA2 {
+public class RayTracer {
 
 
-	private PA2() { }
+	private RayTracer() { }
 
 	public static void main(String[] args) {
 		if (args.length < 3) {

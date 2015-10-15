@@ -28,7 +28,7 @@ public class Transform {
 
 				Vector col = new Vector(that.matrix[0][j], that.matrix[1][j], that.matrix[2][j], this.matrix[3][j]);
 
-				result[i][j] = row.dotProduct(col);
+				result[i][j] = row.dotProductTransform(col);
 
 			}
 
@@ -45,7 +45,7 @@ public class Transform {
 
 				Vector col = new Vector(m.verticies[0][j], m.verticies[1][j], m.verticies[2][j], m.verticies[3][j]);
 
-				result[i][j] = row.dotProduct(col);
+				result[i][j] = row.dotProductTransform(col);
 
 			}
 		}

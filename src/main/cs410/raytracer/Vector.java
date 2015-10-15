@@ -16,12 +16,12 @@ public class Vector {
         p[w] = pw;
     }
 
-    public Vector(Vector v) {
+    /*public Vector(Vector v) {
         p[x] = v.p[x];
         p[y] = v.p[y];
         p[z] = v.p[z];
         p[w] = v.p[w];
-    }
+    }*/
 
     /**
      * Adds the given Vector to this Vector u = u + v and returns the new vector
@@ -38,8 +38,9 @@ public class Vector {
      * @param v
      */
     public Vector subtract(Vector v) {
-        Vector newV = v.multiply(-1);
-        return new Vector(p[x] + newV.p[x], p[y]  + newV.p[y], p[z] + newV.p[z], p[w]);
+        //Vector newV = ;
+        return add(v.multiply(-1));
+        //return new Vector(p[x] + newV.p[x], p[y]  + newV.p[y], p[z] + newV.p[z], p[w]);
     }
 
     /**
@@ -48,6 +49,20 @@ public class Vector {
      * @param v
      */
     public float dotProduct(Vector v) {
+        float xVal = p[x] * v.p[x];
+        float yVal = p[y] * v.p[y];
+        float zVal = p[z] * v.p[z];
+        //float wVal = p[w] * v.p[w];
+
+        return xVal + yVal + zVal;
+    }
+    
+    /**
+     * Calculates and returns the dot product of this Vector and v d = u . v
+     * 
+     * @param v
+     */
+    public float dotProductTransform(Vector v) {
         float xVal = p[x] * v.p[x];
         float yVal = p[y] * v.p[y];
         float zVal = p[z] * v.p[z];

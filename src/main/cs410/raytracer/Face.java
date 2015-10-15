@@ -7,11 +7,8 @@ public class Face {
 	
 	Vector[] verticies;
 	Vector N;
+	Vector zeroVector = new Vector(0, 0, 0, 0);
 
-	public Face(int[] vertexIndicies) {
-		this.vertexIndicies = vertexIndicies;
-	}
-	
 	public Face(int[] vertexIndicies, Vector[] verticies) throws InvalidFormatException {
         this.vertexIndicies = vertexIndicies;
         this.verticies = verticies;
@@ -45,22 +42,23 @@ public class Face {
 	    Vector bc = c.subtract(b);
 	    Vector ac = c.subtract(a);
 	    
-	    Vector abPlusBc = ab.add(bc);
+	    Vector abCrossAc = ab.crossProduct(ac);
 	    
-	   //System.out.println("abPlusBc = " + abPlusBc.toString());
-	    //System.out.println("ac = " + ac.toString());
+	    if(abCrossAc.equalTo(zeroVector)){
+	        //System.out.println("abCrossAc = " + abCrossAc.toString());
+	        return null;
+	    }
 	    
-	    //if(abPlusBc.equalTo(ac)) return null;
+	    Vector n = ab.crossProduct(bc).getNormal();
 	    
-	    Vector n = ab.crossProduct(bc);
-	    
-	    n.normalize();
 	    return n;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
+		
+		sb.append(vertexIndicies.length + " ");
 		
 		for(int i = 0; i < vertexIndicies.length; i++){
 			sb.append(vertexIndicies[i] + " ");

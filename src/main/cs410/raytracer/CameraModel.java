@@ -32,28 +32,26 @@ public class CameraModel {
         this.maxu = maxu;
         this.maxv = maxv;
         
-        System.out.println("FP = " + fp);
-        System.out.println("lap = " + lap);
-        System.out.println("vup = " + vup);
-        System.out.println("d = " + d);
-        System.out.println("minu = " + minu);
-        System.out.println("minv = " + minv);
-        System.out.println("maxu = " + maxu);
-        System.out.println("maxv = " + maxv);
-        
         W = lap.subtract(fp).getNormal();
-        U = vup.crossProduct(W).getNormal();
+        U = W.crossProduct(vup).getNormal();
         V = W.crossProduct(U).getNormal();
         
+        this.fpdn = fp.add(W.multiply(d));
+        
+        this.image = new Image(getHeight(), getWidth());
+        
+        System.out.println("FP = " + this.fp);
+        System.out.println("lap = " + this.lap);
+        System.out.println("vup = " + this.vup);
+        System.out.println("d = " + this.d);
+        System.out.println("minu = " + this.minu);
+        System.out.println("minv = " + this.minv);
+        System.out.println("maxu = " + this.maxu);
+        System.out.println("maxv = " + this.maxv);
         System.out.println("W = " + W.toString());
         System.out.println("U = " + U.toString());
         System.out.println("V = " + V.toString());
-        
-        this.fpdn =  fp.add(W.multiply(d));
-        
         System.out.println("fpdn = " + fpdn.toString());
-        
-        this.image = new Image(getHeight(), getWidth());
         
     }
     
@@ -66,15 +64,18 @@ public class CameraModel {
     }
     
     public void fillPixel(int u, int v, RGB color){
-        int x = v - minv; 
-        int y = u - minu;
         
-        image.pixels[x][y] = color;
+        int x = u - minu;
+        int y = v - minv; 
+        
+        //System.out.println("filling pixel: (" + u + ", " + v + ") at index: " + y + ", " + x +")");
+        
+        image.pixels[y][x] = color;
     }
     
     public Vector getPixelPoint(int u, int v){
-        //float u = (float) (((float)minu + ((float)maxu-(float)minu) * ((float)i+0.5)) / (float)getWidth());
-        //float v = (float) (((float)minv + ((float)maxv-(float)minv) * ((float)j+0.5)) / (float)getHeight());
+        //float u1 = (float) (((float)minu + ((float)maxu-(float)minu) * ((float)u+0.5)) / (float)getWidth());
+        //float v1 = (float) (((float)minv + ((float)maxv-(float)minv) * ((float)v+0.5)) / (float)getHeight());
         
         Vector uU = U.multiply(u);
         Vector vV = V.multiply(v);
@@ -83,8 +84,8 @@ public class CameraModel {
     }
 
     public Vector getUnit(Vector L) {
-        Vector unit = L.subtract(fp);
-        unit.normalize();
+        Vector unit = L.subtract(fp).getNormal();
+        //unit.normalize();
         return unit;
     }
 
