@@ -23,14 +23,22 @@ public class ViewModel {
         int cores = Runtime.getRuntime().availableProcessors();
         System.out.println("Number of cores = " + cores);
         
+        
+        
         Thread[] workers = new Thread[cores];
         int sectionWidth = image.getWidth()/cores;
+        boolean oddWidth = image.getWidth() % 2 !=0;
+
         int minu = cameraModel.minu;
         int maxu = cameraModel.maxu;
         int minv = cameraModel.minv;
         int maxv = cameraModel.maxv;
         for(int k = 0; k < cores; k++){
-            maxu = minu + sectionWidth-1;      
+            if(k == cores-1 && oddWidth){
+                maxu = minu + sectionWidth;   
+            }else{
+                maxu = minu + sectionWidth-1;      
+            }
             workers[k] = new Thread(new ImageSection(minu, maxu, minv, maxv));
             minu = maxu + 1;
             workers[k].start();
