@@ -57,11 +57,9 @@ public class RayTracer {
 			}
 		}
 		
-		
-		ViewModel viewModel = new ViewModel(models, cameraModel);
-		
 		System.out.println("Running ray tracer...");
-		
+
+		ViewModel viewModel = new ViewModel(models, cameraModel);
 		viewModel.rayTrace();
 		
 		System.out.println("Ray tracer finished.\nWriting image file: " + outputfile);

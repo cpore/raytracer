@@ -49,7 +49,7 @@ public class Face {
 	        return null;
 	    }
 	    
-	    Vector n = ab.crossProduct(bc).getNormal();
+	    Vector n = ab.crossProduct(bc).getNormalized();
 	    
 	    return n;
 	}

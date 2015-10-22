@@ -1,8 +1,6 @@
 package cs410.raytracer;
 
 public class CameraModel {
-    
-    Image image;
 
     Vector fp; // focal point
 
@@ -32,13 +30,12 @@ public class CameraModel {
         this.maxu = maxu;
         this.maxv = maxv;
         
-        W = lap.subtract(fp).getNormal();
-        U = W.crossProduct(vup).getNormal();
-        V = W.crossProduct(U).getNormal();
+        W = lap.subtract(fp).getNormalized();
+        U = W.crossProduct(vup).getNormalized();
+        V = W.crossProduct(U).getNormalized();
         
         this.fpdn = fp.add(W.multiply(d));
-        
-        this.image = new Image(getHeight(), getWidth());
+
         
         System.out.println("FP = " + this.fp);
         System.out.println("lap = " + this.lap);
@@ -63,15 +60,7 @@ public class CameraModel {
         return Math.abs(minv) + Math.abs(maxv) + 1;
     }
     
-    public void fillPixel(int u, int v, RGB color){
-        
-        int x = u - minu;
-        int y = v - minv; 
-        
-        //System.out.println("filling pixel: (" + u + ", " + v + ") at index: " + y + ", " + x +")");
-        
-        image.pixels[y][x] = color;
-    }
+    
     
     public Vector getPixelPoint(int u, int v){
         //float u1 = (float) (((float)minu + ((float)maxu-(float)minu) * ((float)u+0.5)) / (float)getWidth());
@@ -84,7 +73,7 @@ public class CameraModel {
     }
 
     public Vector getUnit(Vector L) {
-        Vector unit = L.subtract(fp).getNormal();
+        Vector unit = L.subtract(fp).getNormalized();
         //unit.normalize();
         return unit;
     }

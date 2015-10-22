@@ -32,6 +32,12 @@ public class Vector {
         return new Vector(p[x] + v.p[x], p[y] + v.p[y], p[z] + v.p[z], p[w]);
     }
 
+    public void addThis(Vector v) {
+        p[x] += v.p[x];
+        p[y] += v.p[y];
+        p[z] += v.p[z];
+    }
+
     /**
      * Subtracts the given Vector from this Vector u = u + -v
      * 
@@ -41,6 +47,12 @@ public class Vector {
         //Vector newV = ;
         return add(v.multiply(-1));
         //return new Vector(p[x] + newV.p[x], p[y]  + newV.p[y], p[z] + newV.p[z], p[w]);
+    }
+    
+    public void subtractThis(Vector v) {
+        p[x] += -v.p[x];
+        p[y] += -v.p[y];
+        p[z] += -v.p[z];
     }
 
     /**
@@ -56,7 +68,7 @@ public class Vector {
 
         return xVal + yVal + zVal;
     }
-    
+
     /**
      * Calculates and returns the dot product of this Vector and v d = u . v
      * 
@@ -96,6 +108,12 @@ public class Vector {
     public Vector multiply(float s) {
         return new Vector(p[x] * s, p[y] * s, p[z] * s, p[w]);
     }
+    
+    public void multiplyThis(float s) {
+        p[x] *= s;
+        p[y] *= s;
+        p[z] *= s;
+    }
 
     /**
      * Divides this Vector by the given scalar u = s / u
@@ -104,6 +122,12 @@ public class Vector {
      */
     public Vector divide(float s) {
         return new Vector(p[x] / s, p[y] / s, p[z] / s, p[w]);
+    }
+    
+    public void divideThis(float s) {
+        p[x] /= s;
+        p[y] /= s;
+        p[z] /= s;
     }
 
     /**
@@ -120,7 +144,7 @@ public class Vector {
      * 
      * @return a new, normalized version of this Vector
      */
-    public Vector getNormal() {
+    public Vector getNormalized() {
         float m = getMagnitude();
         return new Vector(p[x] / m, p[y] / m, p[z] / m, 1);
     }
@@ -141,13 +165,13 @@ public class Vector {
         return Utils.prettyPrint(p[x]) + " " + Utils.prettyPrint(p[y]) + " "
                 + Utils.prettyPrint(p[z]);
     }
-    
+
     public boolean equalTo(Vector v){
         boolean xe = Math.abs(p[x] - v.p[x]) < EPSILON;
         boolean ye = Math.abs(p[y] - v.p[y]) < EPSILON;
         boolean ze = Math.abs(p[z] - v.p[z]) < EPSILON;
         return xe && ye && ze;
     }
-    
+
 
 }
