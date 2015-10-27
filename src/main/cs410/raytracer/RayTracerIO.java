@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class RayTracerIO {
 
@@ -116,10 +117,10 @@ public class RayTracerIO {
 
             for (int i = 0; i < indicies.length; i++) {
                 try {
-                    indicies[i] = Integer.parseInt(parts[i+1].trim());
+                    indicies[i] = Integer.parseInt(parts[i + 1].trim());
                     vertexPoints[i] = new Vector(verticies[Vector.x][indicies[i]],
                             verticies[Vector.y][indicies[i]], verticies[Vector.z][indicies[i]], 1);
-                    //System.out.print(indicies[i] + " ");
+                    // System.out.print(indicies[i] + " ");
                 } catch (NumberFormatException nfe) {
                     throw new InvalidFormatException(
                             "Bad index at line: " + lineIndex + ": " + line);
@@ -129,9 +130,9 @@ public class RayTracerIO {
                     throw new InvalidFormatException("Index out of range (" + indicies[i]
                             + ") at line: " + lineIndex + ": " + line);
                 }
-                
+
             }
-            //System.out.println();
+            // System.out.println();
 
             lineIndex++;
 
@@ -287,21 +288,86 @@ public class RayTracerIO {
             throw new InvalidFormatException(
                     "Min v coordinate must be less than max v coordinate.");
         }
-        
+
         if (fp.equals(lap)) {
             throw new InvalidFormatException(
                     "The focal point is equal to the look-at-point (or within an epsilon of 0.00001).");
         }
-        
+
         if (vup.getMagnitude() == 0.0f) {
-            throw new InvalidFormatException(
-                    "VUP has 0 magnitude.");
+            throw new InvalidFormatException("VUP has 0 magnitude.");
         }
 
         // TODO check for other bad camera values
 
         return new CameraModel(fp, lap, vup, d, minu, minv, maxu, maxv);
 
+    }
+
+    public static synchronized ArrayList<LightRay> readMaterialFile(String materialfile, ArrayList<Model> models)
+            throws InvalidFormatException, IOException {
+
+        ArrayList<LightRay> lightRays = new ArrayList<LightRay>();
+        BufferedReader br = new BufferedReader(new FileReader(materialfile));
+
+        // read the Face lines
+        int linenum = 1;
+        String line = null;
+        while ((line = br.readLine()) != null) {
+            String[] parts = line.trim().split("\\s+");
+
+            switch (parts[0].trim().charAt(0)) {
+            case 'L':
+                float r = Float.parseFloat(parts[1].trim());
+                float g = Float.parseFloat(parts[2].trim());
+                float b = Float.parseFloat(parts[3].trim());
+                
+                if(parts[4].trim().equals("A") || parts[5].trim().equals("A") || parts[6].trim().equals("A")){
+                    lightRays.add(new LightRay(null, new RGB(r,g,b)));
+                    break;
+                }
+                
+                float x = Float.parseFloat(parts[4].trim());
+                float y = Float.parseFloat(parts[5].trim());
+                float z = Float.parseFloat(parts[6].trim());
+                
+                lightRays.add(new LightRay(new Vector(x, y, z, 1f), new RGB(r, g, b)));
+
+                break;
+            case 'M':
+                int modelIdx = Integer.parseInt(parts[1].trim());
+                if(modelIdx > models.size()-1){
+                    throw new InvalidFormatException("Model index("+modelIdx+") out of range");
+                }
+                int firstPolygon = Integer.parseInt(parts[2].trim());
+                int lastPolygon = Integer.parseInt(parts[3].trim());
+                if (lastPolygon > firstPolygon) {
+                    throw new InvalidFormatException(
+                            "Last Polygon(" + lastPolygon + ") greater than first polygon("
+                                    + firstPolygon + ") at line: " + linenum);
+                }
+                float kr = Float.parseFloat(parts[4].trim());
+                float kg = Float.parseFloat(parts[5].trim());
+                float kb = Float.parseFloat(parts[6].trim());
+                float ks = Float.parseFloat(parts[7].trim());
+                float alpha = Float.parseFloat(parts[8].trim());
+
+                Model model = models.get(modelIdx);
+                for (int i = firstPolygon; i <= lastPolygon; i++) {
+                    Face face = model.faces[i];
+                    face.setDiffuseReflectance(kr, kg, kb);
+                    face.setSpecularReflectance(ks, alpha);
+                }
+                break;
+            default:
+                throw new InvalidFormatException("Invalid starting character at line: " + linenum);
+            }
+
+            linenum++;
+        }
+
+        br.close();
+        return lightRays;
     }
 
     public static synchronized void writeModelFile(Model model, String filename)

@@ -1,20 +1,22 @@
 package cs410.raytracer;
 
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public class ViewModel {
 
-    private HashSet<Model> modelSet;
+    private ArrayList<Model> modelList;
+    private ArrayList<LightRay> lightRays;
     private CameraModel cameraModel;
 
     private Image image;
 
 
-    public ViewModel(HashSet<Model> modelSet, CameraModel cameraModel) {
-        this.modelSet = modelSet;
+    public ViewModel(ArrayList<Model> modelSet, CameraModel cameraModel, ArrayList<LightRay> lightRays) {
+        this.modelList = modelSet;
         this.cameraModel = cameraModel;
         this.image = new Image(cameraModel.getHeight(), cameraModel.getWidth(), cameraModel.minu, cameraModel.minv);
+        this.lightRays = lightRays;
 
     }
 
@@ -63,7 +65,7 @@ public class ViewModel {
 
                 boolean hit = false;
 
-                for(Model m: modelSet){
+                for(Model m: modelList){
                     for(Face f: m.faces){
                         //System.out.println(P.toString());
                         

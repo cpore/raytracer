@@ -8,6 +8,15 @@ public class Face {
 	Vector[] verticies;
 	Vector N;
 	Vector zeroVector = new Vector(0, 0, 0, 0);
+	
+	//diffuse (Lambertian) reflection values
+	float kr = 0.5f;
+	float kg = 0.5f;
+	float kb = 0.5f;
+	
+	//specular reflection values
+	float ks = 0.0f;
+	float alpha = 1.0f;
 
 	public Face(int[] vertexIndicies, Vector[] verticies) throws InvalidFormatException {
         this.vertexIndicies = vertexIndicies;
@@ -34,7 +43,6 @@ public class Face {
         if(N == null){
             throw new InvalidFormatException("All Vertices for face are collinear");
         }
-        
     }
 		
 	private Vector getN(Vector a, Vector b, Vector c){
@@ -52,6 +60,17 @@ public class Face {
 	    Vector n = ab.crossProduct(bc).getNormalized();
 	    
 	    return n;
+	}
+	
+	public void setDiffuseReflectance(float kr, float kg, float kb){
+	    this.kr = kr;
+	    this.kg = kg;
+	    this.kb = kb;
+	}
+	
+	public void setSpecularReflectance(float ks, float alpha){
+        this.ks = ks;
+        this.alpha = alpha;
 	}
 
 	@Override

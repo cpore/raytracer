@@ -142,7 +142,8 @@ public class Model {
 		return new Transform(zRotation);
 	}
 
-	private Transform getIdentityTransform(){
+	@SuppressWarnings("unused")
+    private Transform getIdentityTransform(){
 		float[][] identityMatrix = new float[][]{
 			{ 1, 0, 0, 0 },
 			{ 0, 1, 0, 0 },
