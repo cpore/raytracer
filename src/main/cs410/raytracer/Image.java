@@ -10,6 +10,11 @@ public class Image {
     int minu, minv;
     Progress progress;
     
+    final float MIN = 0.0f;
+    final float MAX = 255.0f;
+    float minVal = 1.0f;
+    float maxVal = 0.0f;
+    
     public Image(int height, int width, int minu, int minv){
         pixels = new RGB[height][width];
         this.minu = minu;
@@ -31,14 +36,39 @@ public class Image {
         int y = v - minv; 
         
         //System.out.println("filling pixel: (" + u + ", " + v + ") at index: " + y + ", " + x +")");
+        float minColor = color.getMinVal();
+        if(minColor < minVal) minVal = minColor;
+        float maxColor = color.getMaxVal();
+        if(maxColor > maxVal) maxVal = maxColor;
         
         pixels[y][x] = color;
         progress.update();
     }
-       
+    
+    private RGB[][] getScaledPixels(){
+        RGB[][] scaledPixels = new RGB[pixels.length][pixels[0].length];
+        for(int i = 0; i < pixels.length; i++){
+            for(int j = 0; j < pixels[i].length; j++){
+                scaledPixels[i][j] = getScaledPixel(pixels[i][j]);
+            }
+        }
+        
+        return scaledPixels;
+    }
+    
+    private RGB getScaledPixel(RGB pixel){
+        RGB scaledPixel = new RGB();
+        for(int i = 0; i < 3; i++){
+            scaledPixel.rgb[i] = (((MAX-MIN)*(pixel.rgb[i] - minVal)) / (maxVal - minVal)) + MIN;
+        }
+        
+        return scaledPixel; 
+    }
     
     public void writeToFile(String outputfile) throws IOException{
         FileWriter fw = new FileWriter(new File(outputfile));
+        
+        RGB[][] pixels = getScaledPixels();
         
         //first line: "magic number"
         fw.write("P3\n");

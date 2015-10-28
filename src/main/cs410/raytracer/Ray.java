@@ -6,10 +6,10 @@ public class Ray {
     Vector L;
     Vector U;
 
-    public Ray(Vector L, Vector U) {
+    public Ray(Vector L, Vector U, RGB ambientLight) {
         this.L = L;
         this.U = U;
-        pixel = new RGB();
+        pixel = ambientLight;
     }
 
     /**
@@ -57,6 +57,24 @@ public class Ray {
         Vector P = L.add(U.multiply(t));
         return P;
     }
+    
+    public Vector getLp(LightSource ls, Face f){
+        Vector V = U.multiply(-1);
+        
+        //todo should we create a copy of f.N or replace it?
+        if(f.N.dotProduct(V) < 0f){
+            f.N = f.N.multiply(-1);
+        }
+        
+        Vector P = getPointOfIntersection(f);
+        Vector Lp = ls.position.subtract(P).getNormalized();
+        
+        return Lp;
+        
+        //Vector R = f.N.multiply(2 * L.dotProduct(f.N)).subtract(L);
+        
+        
+    }
 
     public boolean intersectsPolygon(Face f){
         Vector P = getPointOfIntersection(f);
@@ -90,7 +108,7 @@ public class Ray {
 
         }
 
-        pixel = new RGB(255, 255, 255);
+        pixel = new RGB(1.0f, 1.0f, 1.0f);
         return true;
     }
     

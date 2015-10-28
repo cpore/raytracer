@@ -23,7 +23,14 @@ public class RGB {
     
     @Override
     public String toString(){
-        return String.format("%3d %3d %3d", rgb[r], rgb[g], rgb[b]);
+        return String.format("%3d %3d %3d", Math.round(rgb[r]), Math.round(rgb[g]), Math.round(rgb[b]));
     }
 
+    public float getMinVal(){
+        return Math.min(Math.min(rgb[r], rgb[g]), rgb[b]);
+    }
+    
+    public float getMaxVal(){
+        return Math.max(Math.max(rgb[r], rgb[g]), rgb[b]);
+    }
 }

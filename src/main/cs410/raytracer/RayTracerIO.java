@@ -304,10 +304,10 @@ public class RayTracerIO {
 
     }
 
-    public static synchronized ArrayList<LightRay> readMaterialFile(String materialfile, ArrayList<Model> models)
+    public static synchronized ArrayList<LightSource> readMaterialFile(String materialfile, ArrayList<Model> models)
             throws InvalidFormatException, IOException {
 
-        ArrayList<LightRay> lightRays = new ArrayList<LightRay>();
+        ArrayList<LightSource> lightRays = new ArrayList<LightSource>();
         BufferedReader br = new BufferedReader(new FileReader(materialfile));
 
         // read the Face lines
@@ -323,7 +323,7 @@ public class RayTracerIO {
                 float b = Float.parseFloat(parts[3].trim());
                 
                 if(parts[4].trim().equals("A") || parts[5].trim().equals("A") || parts[6].trim().equals("A")){
-                    lightRays.add(new LightRay(null, new RGB(r,g,b)));
+                    lightRays.add(new LightSource(null, new RGB(r,g,b)));
                     break;
                 }
                 
@@ -331,7 +331,7 @@ public class RayTracerIO {
                 float y = Float.parseFloat(parts[5].trim());
                 float z = Float.parseFloat(parts[6].trim());
                 
-                lightRays.add(new LightRay(new Vector(x, y, z, 1f), new RGB(r, g, b)));
+                lightRays.add(new LightSource(new Vector(x, y, z, 1f), new RGB(r, g, b)));
 
                 break;
             case 'M':
@@ -341,7 +341,7 @@ public class RayTracerIO {
                 }
                 int firstPolygon = Integer.parseInt(parts[2].trim());
                 int lastPolygon = Integer.parseInt(parts[3].trim());
-                if (lastPolygon > firstPolygon) {
+                if (lastPolygon < firstPolygon) {
                     throw new InvalidFormatException(
                             "Last Polygon(" + lastPolygon + ") greater than first polygon("
                                     + firstPolygon + ") at line: " + linenum);
@@ -350,7 +350,7 @@ public class RayTracerIO {
                 float kg = Float.parseFloat(parts[5].trim());
                 float kb = Float.parseFloat(parts[6].trim());
                 float ks = Float.parseFloat(parts[7].trim());
-                float alpha = Float.parseFloat(parts[8].trim());
+                int alpha = Integer.parseInt(parts[8].trim());
 
                 Model model = models.get(modelIdx);
                 for (int i = firstPolygon; i <= lastPolygon; i++) {
