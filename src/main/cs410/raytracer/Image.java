@@ -59,7 +59,7 @@ public class Image {
     private RGB getScaledPixel(RGB pixel){
         RGB scaledPixel = new RGB();
         for(int i = 0; i < 3; i++){
-            scaledPixel.rgb[i] = (((MAX-MIN)*(pixel.rgb[i] - minVal)) / (maxVal - minVal)) + MIN;
+            scaledPixel.rgb[i] = 255 * ((pixel.rgb[i] - minVal) / (maxVal - minVal));//(((MAX-MIN)*(pixel.rgb[i] - minVal)) / (maxVal - minVal)) + MIN;
         }
         
         return scaledPixel; 
@@ -67,6 +67,8 @@ public class Image {
     
     public void writeToFile(String outputfile) throws IOException{
         FileWriter fw = new FileWriter(new File(outputfile));
+        
+        System.out.println("minVal = " + minVal + ", maxVal = " + maxVal);
         
         RGB[][] pixels = getScaledPixels();
         

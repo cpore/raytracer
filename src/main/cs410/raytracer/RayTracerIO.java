@@ -13,6 +13,7 @@ public class RayTracerIO {
 
     public static Model readModelFile(String filename)
             throws NumberFormatException, IOException, InvalidFormatException {
+        System.out.println("Reading model file: " + filename);
         Integer lineIndex = new Integer(1);
 
         BufferedReader br = new BufferedReader(new FileReader(filename));
@@ -318,6 +319,7 @@ public class RayTracerIO {
 
             switch (parts[0].trim().charAt(0)) {
             case 'L':
+                System.out.println(line);
                 float r = Float.parseFloat(parts[1].trim());
                 float g = Float.parseFloat(parts[2].trim());
                 float b = Float.parseFloat(parts[3].trim());
@@ -360,7 +362,7 @@ public class RayTracerIO {
                 }
                 break;
             default:
-                throw new InvalidFormatException("Invalid starting character at line: " + linenum);
+                break;//throw new InvalidFormatException("Invalid starting character at line: " + linenum);
             }
 
             linenum++;

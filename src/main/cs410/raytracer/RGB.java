@@ -33,4 +33,28 @@ public class RGB {
     public float getMaxVal(){
         return Math.max(Math.max(rgb[r], rgb[g]), rgb[b]);
     }
+    
+    public RGB add(RGB that){
+        float rr = this.rgb[r] + that.rgb[r];
+        float gg = this.rgb[g] + that.rgb[g];
+        float bb = this.rgb[b] + that.rgb[b];
+        
+        return new RGB(rr, gg, bb);
+    }
+    
+    public RGB multiply(RGB that){
+        float rr = this.rgb[r] * that.rgb[r];
+        float gg = this.rgb[g] * that.rgb[g];
+        float bb = this.rgb[b] * that.rgb[b];
+        
+        return new RGB(rr, gg, bb);
+    }
+    
+    public RGB multiply(float s){
+        float rr = this.rgb[r] * s;
+        float gg = this.rgb[g] * s;
+        float bb = this.rgb[b] * s;
+        
+        return new RGB(rr, gg, bb);
+    }
 }

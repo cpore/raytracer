@@ -16,12 +16,12 @@ public class Vector {
         p[w] = pw;
     }
 
-    /*public Vector(Vector v) {
+    public Vector(Vector v) {
         p[x] = v.p[x];
         p[y] = v.p[y];
         p[z] = v.p[z];
         p[w] = v.p[w];
-    }*/
+    }
 
     /**
      * Adds the given Vector to this Vector u = u + v and returns the new vector

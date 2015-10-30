@@ -2,14 +2,12 @@ package cs410.raytracer;
 
 public class Ray {
 
-    RGB pixel;
     Vector L;
     Vector U;
 
-    public Ray(Vector L, Vector U, RGB ambientLight) {
+    public Ray(Vector L, Vector U) {
         this.L = L;
         this.U = U;
-        pixel = ambientLight;
     }
 
     /**
@@ -31,7 +29,7 @@ public class Ray {
             return null;
         }*/
 
-        if(nDotU == 0.0f){
+        if(Math.abs(nDotU) == 0.0f){
             //System.out.println("nDotU = " + nDotU);
             return null;
         }
@@ -58,21 +56,21 @@ public class Ray {
         return P;
     }
     
-    public Vector getLp(LightSource ls, Face f){
+    public LightRay getLightRay(LightSource ls, Face f){
         Vector V = U.multiply(-1);
         
         //todo should we create a copy of f.N or replace it?
-        if(f.N.dotProduct(V) < 0f){
+        //Vector fN = new Vector(f.N);
+        if(f.N.dotProduct(V) < 0.0f){
             f.N = f.N.multiply(-1);
         }
         
         Vector P = getPointOfIntersection(f);
         Vector Lp = ls.position.subtract(P).getNormalized();
         
-        return Lp;
+        Vector R = f.N.multiply(2.0f * Lp.dotProduct(f.N)).subtract(Lp).getNormalized();
         
-        //Vector R = f.N.multiply(2 * L.dotProduct(f.N)).subtract(L);
-        
+        return new LightRay(L, U, Lp, R);
         
     }
 
@@ -104,11 +102,10 @@ public class Ray {
             // if result >= 0 it is on the correct side
             //if(Float.compare(result, 0.0f) < 0) return false;
             //give it some leeway to fill holes
-            if(result < -0.01) return false;
+            if(result < -0.0001f) return false;
 
         }
 
-        pixel = new RGB(1.0f, 1.0f, 1.0f);
         return true;
     }
     

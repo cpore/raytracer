@@ -12,15 +12,15 @@ public class Progress {
     public synchronized void update(){
       //update progress
         if(pixelCounter == 0){
-            System.out.println("Working... " + (percent) + "% Complete.");
+            System.out.println("Reticulating Splines... " + (percent) + "% Complete.");
         }
         int newPct = (int) (((float)++pixelCounter / (float)totalPixels) * 100f);
         if(newPct == 100){
-            System.out.println("Working... " + (newPct) + "% Complete.");
+            System.out.println("Reticulating Splines... " + (newPct) + "% Complete.");
 
         }else if(newPct > percent+5){
             percent = newPct-1;
-            System.out.println("Working... " + (percent) + "% Complete.");
+            System.out.println("Reticulating Splines... " + (percent) + "% Complete.");
 
         }
     }

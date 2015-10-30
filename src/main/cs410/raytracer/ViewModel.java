@@ -59,18 +59,21 @@ public class ViewModel {
     private void rayTraceSection(int minu, int maxu, int minv, int maxv) {
         for(int u = minu; u <= maxu; u++){
             for(int v = minv; v <= maxv; v++){
+                
+                RGB I = new RGB();
                 //Throw ray from FP to pixel
                 Vector L = cameraModel.getPixelPoint(u, v);
                 Vector U = cameraModel.getUnit(L);
 
-                Ray ray = new Ray(L, U, ambient.color);
+                Ray ray = new Ray(L, U);
 
                 boolean hit = false;
 
-
+                
                 for(Model m: modelList){
                     for(Face f: m.faces){
 
+                        // check if ray hits a polygon
                         if(!ray.intersectsSphere(f)){
                             continue;
                         }
@@ -85,42 +88,60 @@ public class ViewModel {
                         }
 
                         //Calculate color along ray
+                        //(color of light ray) 
+                        RGB lightSum = new RGB();
                         for(LightSource ls: lightSources){
 
-                            Vector Lp = ray.getLp(ls, f);
+                            LightRay lightRay = ray.getLightRay(ls, f);
 
                             // check for self-occlusion (light is behind face)
-                            if(Lp.dotProduct(f.N) < 0){
+                            if(lightRay.isOccluded(ls, f)){
                                 continue;
                             }
                             
-                            // TODO make sure t value with Light ray is non-zero
-                            
+                            boolean shadowed = false;
                             for(Model m2: modelList){
-                                for(Face f2: m.faces){
-                                    
+                                for(Face f2: m2.faces){
+                                    // check if light source is shadowed by another polygon
+                                    shadowed = lightRay.intersectsPolygon(f2);
+                                    if(shadowed){
+                                        break;
+                                    }
                                 }
-                                
+                                if(shadowed){
+                                    break;
+                                }
                             }
                             
-
+                            // light source is not occluded or shadowed, so we can add the color
+                            RGB diffuse = f.Kd.multiply(ls.B.multiply(lightRay.L.dotProduct(f.N)));
+                            RGB specular = ls.B.multiply((float)(Math.pow(ray.U.dotProduct(lightRay.R), f.alpha))).multiply(f.ks);
+                            
+                            lightSum = lightSum.add(diffuse.add(specular));
 
                         }
+                        RGB KdBa = f.Kd.multiply(ambient.B);
+                        RGB Il = KdBa.add(lightSum);
+                        I = I.add(Il);
+                        //I = I.add(lightSum);
+                        
                         //we know this pixel hit at least one face in this model,
                         //so we don't need to check the rest of the models
-                        if(hit){
+                        /*if(hit){
                             break;
-                        }
+                        }*/
                     }
                 }
 
-
+                
                 //Fill in pixel
-                image.fillPixel(u, v, ray.pixel);
+                image.fillPixel(u, v, I);
 
             }
         }
     }
+    
+    
 
     public void writeImageToFile(String outputfile) throws IOException{
         image.writeToFile(outputfile);
