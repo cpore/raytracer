@@ -29,7 +29,7 @@ public class Ray {
             return null;
         }*/
 
-        if(Math.abs(nDotU) == 0.0f){
+        if(nDotU == 0.0f){
             //System.out.println("nDotU = " + nDotU);
             return null;
         }
@@ -68,7 +68,7 @@ public class Ray {
         Vector P = getPointOfIntersection(f);
         Vector Lp = ls.position.subtract(P).getNormalized();
         
-        Vector R = f.N.multiply(2.0f * Lp.dotProduct(f.N)).subtract(Lp).getNormalized();
+        Vector R = L.add(f.N.multiply(2.0f * Lp.dotProduct(f.N))).subtract(Lp).getNormalized();
         
         return new LightRay(L, U, Lp, R);
         

@@ -21,6 +21,10 @@ public class RGB {
         rgb[RGB.b] = b;
     }
     
+    public String printRaw(){
+        return String.valueOf(rgb[r]) + ", " + String.valueOf(rgb[g]) + ", " + String.valueOf(rgb[b]);
+    }
+    
     @Override
     public String toString(){
         return String.format("%3d %3d %3d", Math.round(rgb[r]), Math.round(rgb[g]), Math.round(rgb[b]));

@@ -14,8 +14,8 @@ public class Face {
 
 	
 	//specular reflection values
-	float ks = 0.0f;
-	int alpha = 0;
+	float ks = 1.0f;
+	int alpha = 50;
 
 	public Face(int[] vertexIndicies, Vector[] verticies) throws InvalidFormatException {
         this.vertexIndicies = vertexIndicies;

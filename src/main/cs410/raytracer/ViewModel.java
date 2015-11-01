@@ -114,9 +114,12 @@ public class ViewModel {
                             }
                             
                             // light source is not occluded or shadowed, so we can add the color
-                            RGB diffuse = f.Kd.multiply(ls.B.multiply(lightRay.L.dotProduct(f.N)));
+                            RGB diffuse = f.Kd.multiply(ls.B.multiply(lightRay.Lp.dotProduct(f.N)));
                             RGB specular = ls.B.multiply((float)(Math.pow(ray.U.dotProduct(lightRay.R), f.alpha))).multiply(f.ks);
-                            
+                            if(specular.rgb[RGB.r] > 0.0f || specular.rgb[RGB.g] > 0.0f || specular.rgb[RGB.b] >0.0f)
+                                System.out.println("Specular= " + specular.printRaw());
+                            if(diffuse.rgb[RGB.r] > 0.0f || diffuse.rgb[RGB.g] > 0.0f || diffuse.rgb[RGB.b] >0.0f)
+                                System.out.println("Diffuse= " + diffuse.printRaw());
                             lightSum = lightSum.add(diffuse.add(specular));
 
                         }
@@ -127,9 +130,9 @@ public class ViewModel {
                         
                         //we know this pixel hit at least one face in this model,
                         //so we don't need to check the rest of the models
-                        /*if(hit){
+                        if(hit){
                             break;
-                        }*/
+                        }
                     }
                 }
 
