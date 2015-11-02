@@ -15,39 +15,38 @@ public class Ray {
      * @param f
      * @return
      */
-    private Vector getPointOfIntersection(Face f){
+    protected Vector getPointOfIntersection(Face f){
         // find the point of intersection (P) of the plane this face is in
-        float d = -f.N.dotProduct(f.verticies[0]);
+        double d = -f.N.dotProduct(f.verticies[0]);
         //d = Math.abs(d);
 
         // what if this is zero?
-        float nDotU = f.N.dotProduct(U);
-        float nDotL = f.N.dotProduct(L);
+        double nDotU = f.N.dotProduct(U);
+        double nDotL = f.N.dotProduct(L);
 
-        /* if(Float.compare(nDotU, 0.0f) == 0){
+        /* if(double.compare(nDotU, 0.0f) == 0){
             //System.out.println("nDotU = " + nDotU);
             return null;
         }*/
 
-        if(nDotU == 0.0f){
+        
+        if(nDotU == 0.0){
+            //System.out.println("nDotU = " + nDotU);
+            return null;
+        }
+        
+
+        if(Double.isNaN(nDotU)){
             //System.out.println("nDotU = " + nDotU);
             return null;
         }
 
-        if(Float.isNaN(nDotU)){
-            //System.out.println("nDotU = " + nDotU);
-            return null;
-        }
+        double t = (-(d + nDotL)) / (nDotU);
 
-        float t = (-(d + nDotL)) / (nDotU);
-
-        //if(Float.isNaN(t) || Float.isInfinite(t)) System.out.println("t = " + t);
+        //if(double.isNaN(t) || double.isInfinite(t)) System.out.println("t = " + t);
         //t must be > 1 to use
-        /* if(Float.compare(t, 1.0f) <= 0 || Float.isNaN(t)){
-            //System.out.println("t = " + t);
-            return null;
-        }*/
-        if(t <= 1.0f || Float.isNaN(t)){
+   
+        if(t <= 1.0 || Double.isNaN(t)){
             //System.out.println("t = " + t);
             return null;
         }
@@ -61,14 +60,14 @@ public class Ray {
         
         //todo should we create a copy of f.N or replace it?
         //Vector fN = new Vector(f.N);
-        if(f.N.dotProduct(V) < 0.0f){
+        if(f.N.dotProduct(V) < 0.0){
             f.N = f.N.multiply(-1);
         }
         
         Vector P = getPointOfIntersection(f);
         Vector Lp = ls.position.subtract(P).getNormalized();
         
-        Vector R = L.add(f.N.multiply(2.0f * Lp.dotProduct(f.N))).subtract(Lp).getNormalized();
+        Vector R = Lp.add(f.N.multiply(2.0 * Lp.dotProduct(f.N)).subtract(Lp)).getNormalized();
         
         return new LightRay(L, U, Lp, R);
         
@@ -95,14 +94,13 @@ public class Ray {
 
             Vector Np = e1.crossProduct(epv1);
 
-            float result = f.N.dotProduct(Np);
+            double result = f.N.dotProduct(Np);
             //System.out.println("result = " + result);
             //if(result < 0.0f) return false;
 
             // if result >= 0 it is on the correct side
-            //if(Float.compare(result, 0.0f) < 0) return false;
             //give it some leeway to fill holes
-            if(result < -0.0001f) return false;
+            if(result < -0.001) return false;
 
         }
 
@@ -111,11 +109,11 @@ public class Ray {
     
     public boolean intersectsSphere(Face f){
         
-        float rSquared = -1.0f;
+        double rSquared = -1.0;
         // determine the radius from the 0th vertex to the farthest vertex of the polygon
         Vector Pc = f.verticies[0];
         for(int i = 1; i < f.verticies.length; i++){
-            float radius = f.verticies[i].subtract(Pc).getMagnitude();
+            double radius = f.verticies[i].subtract(Pc).getMagnitude();
             
             if(radius > rSquared){
                 rSquared = radius;
@@ -126,19 +124,19 @@ public class Ray {
         
         Vector T = Pc.subtract(L);
         
-        float UdotTSquared = U.dotProduct(T);
+        double UdotTSquared = U.dotProduct(T);
         UdotTSquared *= UdotTSquared;
         
-        float TdotT = T.dotProduct(T);
+        double TdotT = T.dotProduct(T);
         
-        float discriminant = (UdotTSquared - TdotT) + rSquared;
+        double discriminant = (UdotTSquared - TdotT) + rSquared;
 
         /*if(discriminant >= 0.0){
             
         }else{
             System.out.println("discriminant = " + discriminant);
         }*/
-        return discriminant >= 0.0f;
+        return discriminant >= 0.0;
     }
 
 }

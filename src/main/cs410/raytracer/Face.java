@@ -10,12 +10,12 @@ public class Face {
 	Vector zeroVector = new Vector(0, 0, 0, 0);
 	
 	//diffuse (Lambertian) reflection values
-	RGB Kd = new RGB(0.5f, 0.5f, 0.5f);
+	RGB Kd = new RGB(0.5, 0.5, 0.5);
 
 	
 	//specular reflection values
-	float ks = 1.0f;
-	int alpha = 50;
+	double ks = 0.0;
+	int alpha = 2;
 
 	public Face(int[] vertexIndicies, Vector[] verticies) throws InvalidFormatException {
         this.vertexIndicies = vertexIndicies;
@@ -61,11 +61,11 @@ public class Face {
 	    return n;
 	}
 	
-	public void setDiffuseReflectance(float kr, float kg, float kb){
+	public void setDiffuseReflectance(double kr, double kg, double kb){
 	    this.Kd = new RGB(kr, kg, kb);
 	}
 	
-	public void setSpecularReflectance(float ks, int alpha){
+	public void setSpecularReflectance(double ks, int alpha){
         this.ks = ks;
         this.alpha = alpha;
 	}

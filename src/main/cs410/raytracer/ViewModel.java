@@ -68,7 +68,6 @@ public class ViewModel {
                 Ray ray = new Ray(L, U);
 
                 boolean hit = false;
-
                 
                 for(Model m: modelList){
                     for(Face f: m.faces){
@@ -102,8 +101,11 @@ public class ViewModel {
                             boolean shadowed = false;
                             for(Model m2: modelList){
                                 for(Face f2: m2.faces){
+                                 // check if ray hits a polygon
+                                   
                                     // check if light source is shadowed by another polygon
-                                    shadowed = lightRay.intersectsPolygon(f2);
+                                    // make sure we don't check for itself
+                                    if(!f2.equals(f)) shadowed = lightRay.intersectsPolygon(f2);
                                     if(shadowed){
                                         break;
                                     }
@@ -113,13 +115,16 @@ public class ViewModel {
                                 }
                             }
                             
+                            if(shadowed) continue;
+                            
                             // light source is not occluded or shadowed, so we can add the color
                             RGB diffuse = f.Kd.multiply(ls.B.multiply(lightRay.Lp.dotProduct(f.N)));
-                            RGB specular = ls.B.multiply((float)(Math.pow(ray.U.dotProduct(lightRay.R), f.alpha))).multiply(f.ks);
-                            if(specular.rgb[RGB.r] > 0.0f || specular.rgb[RGB.g] > 0.0f || specular.rgb[RGB.b] >0.0f)
+                            RGB specular = ls.B.multiply(Math.pow(ray.U.dotProduct(lightRay.R), f.alpha)).multiply(f.ks);
+                            /*if(specular.rgb[RGB.r] != 0.0f || specular.rgb[RGB.g] != 0.0f || specular.rgb[RGB.b] != 0.0f)
                                 System.out.println("Specular= " + specular.printRaw());
-                            if(diffuse.rgb[RGB.r] > 0.0f || diffuse.rgb[RGB.g] > 0.0f || diffuse.rgb[RGB.b] >0.0f)
+                            if(diffuse.rgb[RGB.r] != 0.0f || diffuse.rgb[RGB.g] != 0.0f || diffuse.rgb[RGB.b] != 0.0f)
                                 System.out.println("Diffuse= " + diffuse.printRaw());
+                            */
                             lightSum = lightSum.add(diffuse.add(specular));
 
                         }
@@ -130,16 +135,14 @@ public class ViewModel {
                         
                         //we know this pixel hit at least one face in this model,
                         //so we don't need to check the rest of the models
-                        if(hit){
+                        /*if(hit){
                             break;
-                        }
+                        }*/
                     }
                 }
-
                 
                 //Fill in pixel
                 image.fillPixel(u, v, I);
-
             }
         }
     }

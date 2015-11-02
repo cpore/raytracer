@@ -29,7 +29,7 @@ public class RayTracerIO {
             throw new InvalidFormatException("Could not find the number of verticies.");
         }
 
-        float[][] verticies = readVerticies(br, numVerticies, lineIndex);
+        double[][] verticies = readVerticies(br, numVerticies, lineIndex);
 
         Face[] faces = readFaces(br, numFaces, numVerticies, lineIndex, verticies);
 
@@ -75,7 +75,7 @@ public class RayTracerIO {
 
         // read the header lines
         while ((line = br.readLine()) != null) {
-            if ((line.startsWith("property float") || line.startsWith("property double"))
+            if ((line.startsWith("property double") || line.startsWith("property double"))
                     && !(line.endsWith(" x") || line.endsWith(" X"))
                     && !(line.endsWith(" y") || line.endsWith(" Y"))
                     && !(line.endsWith(" z") || line.endsWith(" Z"))) {
@@ -97,7 +97,7 @@ public class RayTracerIO {
     }
 
     private static Face[] readFaces(BufferedReader br, int numFaces, int numVerticies,
-            Integer lineIndex, float[][] verticies) throws IOException, InvalidFormatException {
+            Integer lineIndex, double[][] verticies) throws IOException, InvalidFormatException {
         Face[] faces = new Face[numFaces];
         int idx = 0;
 
@@ -146,11 +146,11 @@ public class RayTracerIO {
         return faces;
     }
 
-    private static float[][] readVerticies(BufferedReader br, int numVerticies, Integer lineIndex)
+    private static double[][] readVerticies(BufferedReader br, int numVerticies, Integer lineIndex)
             throws IOException, InvalidFormatException {
 
         // Vector[] verticies = new Vector[numVerticies];
-        float[][] verticies = new float[4][numVerticies];
+        double[][] verticies = new double[4][numVerticies];
         int col = 0;
 
         String line = null;
@@ -166,21 +166,21 @@ public class RayTracerIO {
             }
             // read the values from the line
             try {
-                verticies[Model.x][col] = Float.parseFloat(parts[Model.x]);
+                verticies[Model.x][col] = Double.parseDouble(parts[Model.x]);
             } catch (NumberFormatException nfe) {
                 throw new InvalidFormatException(
                         "Bad x value (" + parts[Model.x] + ") at line: " + lineIndex + ": " + line);
             }
 
             try {
-                verticies[Model.y][col] = Float.parseFloat(parts[Model.y]);
+                verticies[Model.y][col] = Double.parseDouble(parts[Model.y]);
             } catch (NumberFormatException nfe) {
                 throw new InvalidFormatException(
                         "Bad y value (" + parts[Model.y] + ") at line: " + lineIndex + ": " + line);
             }
 
             try {
-                verticies[Model.z][col] = Float.parseFloat(parts[Model.z]);
+                verticies[Model.z][col] = Double.parseDouble(parts[Model.z]);
             } catch (NumberFormatException nfe) {
                 throw new InvalidFormatException(
                         "Bad z value (" + parts[Model.z] + ")at line: " + lineIndex + ": " + line);
@@ -218,8 +218,8 @@ public class RayTracerIO {
             br.close();
             throw new InvalidFormatException("Focal point line doesn't have three values.");
         }
-        Vector fp = new Vector(Float.parseFloat(split[0]), Float.parseFloat(split[1]),
-                Float.parseFloat(split[2]), 1);
+        Vector fp = new Vector(Double.parseDouble(split[0]), Double.parseDouble(split[1]),
+                Double.parseDouble(split[2]), 1);
 
         // read the look at point line
         line = br.readLine();
@@ -233,8 +233,8 @@ public class RayTracerIO {
             br.close();
             throw new InvalidFormatException("Look-at point line doesn't have three values.");
         }
-        Vector lap = new Vector(Float.parseFloat(split[0]), Float.parseFloat(split[1]),
-                Float.parseFloat(split[2]), 1);
+        Vector lap = new Vector(Double.parseDouble(split[0]), Double.parseDouble(split[1]),
+                Double.parseDouble(split[2]), 1);
 
         // read the VUP line
         line = br.readLine();
@@ -247,8 +247,8 @@ public class RayTracerIO {
             br.close();
             throw new InvalidFormatException("VUP line doesn't have three values.");
         }
-        Vector vup = new Vector(Float.parseFloat(split[0]), Float.parseFloat(split[1]),
-                Float.parseFloat(split[2]), 1);
+        Vector vup = new Vector(Double.parseDouble(split[0]), Double.parseDouble(split[1]),
+                Double.parseDouble(split[2]), 1);
 
         // read focal length
         line = br.readLine();
@@ -256,7 +256,7 @@ public class RayTracerIO {
             br.close();
             throw new InvalidFormatException("Bad fourth line in camera model file.");
         }
-        float d = Float.parseFloat(line.trim());
+        double d = Double.parseDouble(line.trim());
 
         // read min/max values for u/v
         line = br.readLine();
@@ -320,18 +320,18 @@ public class RayTracerIO {
             switch (parts[0].trim().charAt(0)) {
             case 'L':
                 System.out.println(line);
-                float r = Float.parseFloat(parts[1].trim());
-                float g = Float.parseFloat(parts[2].trim());
-                float b = Float.parseFloat(parts[3].trim());
+                double r = Double.parseDouble(parts[1].trim());
+                double g = Double.parseDouble(parts[2].trim());
+                double b = Double.parseDouble(parts[3].trim());
                 
                 if(parts[4].trim().equals("A") || parts[5].trim().equals("A") || parts[6].trim().equals("A")){
                     lightRays.add(new LightSource(null, new RGB(r,g,b)));
                     break;
                 }
                 
-                float x = Float.parseFloat(parts[4].trim());
-                float y = Float.parseFloat(parts[5].trim());
-                float z = Float.parseFloat(parts[6].trim());
+                double x = Double.parseDouble(parts[4].trim());
+                double y = Double.parseDouble(parts[5].trim());
+                double z = Double.parseDouble(parts[6].trim());
                 
                 lightRays.add(new LightSource(new Vector(x, y, z, 1f), new RGB(r, g, b)));
 
@@ -348,10 +348,10 @@ public class RayTracerIO {
                             "Last Polygon(" + lastPolygon + ") greater than first polygon("
                                     + firstPolygon + ") at line: " + linenum);
                 }
-                float kr = Float.parseFloat(parts[4].trim());
-                float kg = Float.parseFloat(parts[5].trim());
-                float kb = Float.parseFloat(parts[6].trim());
-                float ks = Float.parseFloat(parts[7].trim());
+                double kr = Double.parseDouble(parts[4].trim());
+                double kg = Double.parseDouble(parts[5].trim());
+                double kb = Double.parseDouble(parts[6].trim());
+                double ks = Double.parseDouble(parts[7].trim());
                 int alpha = Integer.parseInt(parts[8].trim());
 
                 Model model = models.get(modelIdx);

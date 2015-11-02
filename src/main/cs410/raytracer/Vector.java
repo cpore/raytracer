@@ -1,15 +1,15 @@
 package cs410.raytracer;
 
 public class Vector {
-    final float EPSILON = 0.00001f;
+    final double EPSILON = 0.00001;
     public static final int x = 0;
     public static final int y = 1;
     public static final int z = 2;
     public static final int w = 3;
 
-    public float[] p = new float[4];
+    public double[] p = new double[4];
 
-    public Vector(float px, float py, float pz, float pw) {
+    public Vector(double px, double py, double pz, double pw) {
         p[x] = px;
         p[y] = py;
         p[z] = pz;
@@ -60,11 +60,11 @@ public class Vector {
      * 
      * @param v
      */
-    public float dotProduct(Vector v) {
-        float xVal = p[x] * v.p[x];
-        float yVal = p[y] * v.p[y];
-        float zVal = p[z] * v.p[z];
-        //float wVal = p[w] * v.p[w];
+    public double dotProduct(Vector v) {
+        double xVal = p[x] * v.p[x];
+        double yVal = p[y] * v.p[y];
+        double zVal = p[z] * v.p[z];
+        //double wVal = p[w] * v.p[w];
 
         return xVal + yVal + zVal;
     }
@@ -74,11 +74,11 @@ public class Vector {
      * 
      * @param v
      */
-    public float dotProductTransform(Vector v) {
-        float xVal = p[x] * v.p[x];
-        float yVal = p[y] * v.p[y];
-        float zVal = p[z] * v.p[z];
-        float wVal = p[w] * v.p[w];
+    public double dotProductTransform(Vector v) {
+        double xVal = p[x] * v.p[x];
+        double yVal = p[y] * v.p[y];
+        double zVal = p[z] * v.p[z];
+        double wVal = p[w] * v.p[w];
 
         return xVal + yVal + zVal + wVal;
     }
@@ -93,9 +93,9 @@ public class Vector {
      * @param v
      */
     public Vector crossProduct(Vector v) {
-        float cx = (p[y] * v.p[z]) - (p[z] * v.p[y]);
-        float cy = (p[z] * v.p[x]) - (p[x] * v.p[z]);
-        float cz = (p[x] * v.p[y]) - (p[y] * v.p[x]);
+        double cx = (p[y] * v.p[z]) - (p[z] * v.p[y]);
+        double cy = (p[z] * v.p[x]) - (p[x] * v.p[z]);
+        double cz = (p[x] * v.p[y]) - (p[y] * v.p[x]);
 
         return new Vector(cx, cy, cz, 1);
     }
@@ -105,11 +105,11 @@ public class Vector {
      * 
      * @param v
      */
-    public Vector multiply(float s) {
+    public Vector multiply(double s) {
         return new Vector(p[x] * s, p[y] * s, p[z] * s, p[w]);
     }
     
-    public void multiplyThis(float s) {
+    public void multiplyThis(double s) {
         p[x] *= s;
         p[y] *= s;
         p[z] *= s;
@@ -120,11 +120,11 @@ public class Vector {
      * 
      * @param v
      */
-    public Vector divide(float s) {
+    public Vector divide(double s) {
         return new Vector(p[x] / s, p[y] / s, p[z] / s, p[w]);
     }
     
-    public void divideThis(float s) {
+    public void divideThis(double s) {
         p[x] /= s;
         p[y] /= s;
         p[z] /= s;
@@ -135,8 +135,8 @@ public class Vector {
      * 
      * @return the magnitude of this Vector
      */
-    public float getMagnitude() {
-        return (float) Math.sqrt((p[x] * p[x]) + (p[y] * p[y]) + (p[z] * p[z]));
+    public double getMagnitude() {
+        return (double) Math.sqrt((p[x] * p[x]) + (p[y] * p[y]) + (p[z] * p[z]));
     }
 
     /**
@@ -145,7 +145,7 @@ public class Vector {
      * @return a new, normalized version of this Vector
      */
     public Vector getNormalized() {
-        float m = getMagnitude();
+        double m = getMagnitude();
         return new Vector(p[x] / m, p[y] / m, p[z] / m, 1);
     }
 
@@ -153,7 +153,7 @@ public class Vector {
      * Normalizes this vector.
      */
     public void normalize() {
-        float m = getMagnitude();
+        double m = getMagnitude();
         p[x] = p[x] / m;
         p[y] = p[y] / m;
         p[z] = p[z] / m;

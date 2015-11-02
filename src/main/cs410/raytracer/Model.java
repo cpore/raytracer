@@ -22,12 +22,12 @@ public class Model {
 
 	public String fileHeader;
 
-	public float[][] verticies;
+	public double[][] verticies;
 	public Vector meanVertex;
-	public float[] boundingBox;
+	public double[] boundingBox;
 	public Face[] faces;
 
-	public Model(String fileHeader, float[][] verticies, Face[] faces){
+	public Model(String fileHeader, double[][] verticies, Face[] faces){
 		this.fileHeader = fileHeader;
 		this.verticies = verticies;
 		this.faces = faces;
@@ -36,7 +36,7 @@ public class Model {
 	}
 	
 	/*public void combine(Model m){
-	    float[][] verticies =  new float[4][this.verticies[0].length + m.verticies[0].length];
+	    double[][] verticies =  new double[4][this.verticies[0].length + m.verticies[0].length];
 	    //copy first part
 	    for(int i = 0; i < this.verticies[0].length; i++){
 	        verticies[0][i] = this.verticies[0][i];
@@ -67,17 +67,17 @@ public class Model {
 	}*/
 
 	private void updateStats() {
-		boundingBox = new float[6];
-		boundingBox[MIN_X] = Float.MAX_VALUE;
-		boundingBox[MAX_X] = Float.MIN_VALUE;
-		boundingBox[MIN_Y] = Float.MAX_VALUE;
-		boundingBox[MAX_Y] = Float.MIN_VALUE;
-		boundingBox[MIN_Z] = Float.MAX_VALUE;
-		boundingBox[MAX_Z] = Float.MIN_VALUE;
+		boundingBox = new double[6];
+		boundingBox[MIN_X] = Double.MAX_VALUE;
+		boundingBox[MAX_X] = Double.MIN_VALUE;
+		boundingBox[MIN_Y] = Double.MAX_VALUE;
+		boundingBox[MAX_Y] = Double.MIN_VALUE;
+		boundingBox[MIN_Z] = Double.MAX_VALUE;
+		boundingBox[MAX_Z] = Double.MIN_VALUE;
 
-		float totalx = 0;
-		float totaly = 0;
-		float totalz = 0;
+		double totalx = 0;
+		double totaly = 0;
+		double totalz = 0;
 
 		for(int j = 0; j < verticies[1].length; j++){
 			Vector v = new Vector(verticies[x][j], verticies[y][j], verticies[z][j], 1);
@@ -110,8 +110,8 @@ public class Model {
 		meanVertex = new Vector(totalx / verticies[1].length, totaly / verticies[1].length, totalz / verticies[1].length, 1);
 	}
 	
-	private Transform getScaleTransform(float sx, float sy, float sz){
-		float[][] scaleMatrix = new float[][]{
+	private Transform getScaleTransform(double sx, double sy, double sz){
+		double[][] scaleMatrix = new double[][]{
 			{ sx, 0, 0, 0 },
 			{ 0, sy, 0, 0 },
 			{ 0, 0, sz, 0 },
@@ -120,8 +120,8 @@ public class Model {
 		return new Transform(scaleMatrix);
 	}
 
-	private Transform getTranslateTransform(float tx, float ty, float tz){
-		float[][] translateMatrix = new float[][]{
+	private Transform getTranslateTransform(double tx, double ty, double tz){
+		double[][] translateMatrix = new double[][]{
 			{ 1, 0, 0, tx },
 			{ 0, 1, 0, ty },
 			{ 0, 0, 1, tz },
@@ -130,11 +130,11 @@ public class Model {
 		return new Transform(translateMatrix);
 	}
 
-	private Transform getZaxisRotationTransform(float theta){
-		float theta2 = (float) Math.toRadians(theta);
-		float[][] zRotation = new float[][]{
-			{ (float) Math.cos(theta2), (float) -Math.sin(theta2), 0, 0 },
-			{ (float) Math.sin(theta2), (float) Math.cos(theta2) , 0, 0 },
+	private Transform getZaxisRotationTransform(double theta){
+		double theta2 = (double) Math.toRadians(theta);
+		double[][] zRotation = new double[][]{
+			{ (double) Math.cos(theta2), (double) -Math.sin(theta2), 0, 0 },
+			{ (double) Math.sin(theta2), (double) Math.cos(theta2) , 0, 0 },
 			{ 0                       , 0                        , 1, 0 },
 			{ 0                       , 0                        , 0, 1 }
 		};
@@ -144,7 +144,7 @@ public class Model {
 
 	@SuppressWarnings("unused")
     private Transform getIdentityTransform(){
-		float[][] identityMatrix = new float[][]{
+		double[][] identityMatrix = new double[][]{
 			{ 1, 0, 0, 0 },
 			{ 0, 1, 0, 0 },
 			{ 0, 0, 1, 0 },
@@ -153,19 +153,19 @@ public class Model {
 		return new Transform(identityMatrix);
 	}
 
-	public void scale(float sx, float sy, float sz) {
+	public void scale(double sx, double sy, double sz) {
 		Transform scaleTransform = getScaleTransform(sx, sy, sz);
 		scaleTransform.apply(this);
 
 	}
 
-	public void translate(float tx, float ty, float tz) {
+	public void translate(double tx, double ty, double tz) {
 		Transform translateTransform = getTranslateTransform(tx, ty, tz);
 		translateTransform.apply(this);
 
 	}
 
-	private Transform createRotationMatrix(float rx, float ry, float rz){
+	private Transform createRotationMatrix(double rx, double ry, double rz){
 		//normalize the axis of rotation
 		Vector w = new Vector(rx, ry, rz, 1);
 		w.normalize();
@@ -173,7 +173,7 @@ public class Model {
 		// create an axis m not parallel to w
 		// by setting the smallest term in w to 1
 		// and renormalizing
-		float smallest = w.p[x];
+		double smallest = w.p[x];
 		int idx = x;
 		if(w.p[y] < smallest){
 			smallest = w.p[y];
@@ -185,7 +185,7 @@ public class Model {
 		}
 		
 		Vector m = new Vector(w.p[x], w.p[y], w.p[z], 1f);
-		m.p[idx] = 1f;
+		m.p[idx] = 1.0;
 		m.normalize();
 		
 		Vector u = w.crossProduct(m);
@@ -193,7 +193,7 @@ public class Model {
 		Vector v = w.crossProduct(u);
 		v.normalize();
 		
-		float[][] rotationMatrix =  new float[][]{
+		double[][] rotationMatrix =  new double[][]{
 			{ u.p[x], u.p[y], u.p[z], 0 },
 			{ v.p[x], v.p[y], v.p[z], 0 },
 			{ w.p[x], w.p[y], w.p[z], 0 },
@@ -203,7 +203,7 @@ public class Model {
 		return new Transform(rotationMatrix);		
 	}
 
-	public void rotate(float rx, float ry, float rz, float theta) {
+	public void rotate(double rx, double ry, double rz, double theta) {
 		Transform zRotation = getZaxisRotationTransform(theta);
 		Transform rotation = createRotationMatrix(rx, ry, rz);
 		Transform rotationTranspose = rotation.getTranspose();
@@ -230,9 +230,9 @@ public class Model {
 		System.out.println("\tMin Z: " + Utils.prettyPrint(boundingBox[MIN_Z]));
 		System.out.println("\tMax Z: " + Utils.prettyPrint(boundingBox[MAX_Z]));
 		
-		float x = (boundingBox[MIN_X] + boundingBox[MAX_X]) / 2;
-		float y = (boundingBox[MIN_Y] + boundingBox[MAX_Y]) / 2;
-		float z = (boundingBox[MIN_Z] + boundingBox[MAX_Z]) / 2;
+		double x = (boundingBox[MIN_X] + boundingBox[MAX_X]) / 2;
+		double y = (boundingBox[MIN_Y] + boundingBox[MAX_Y]) / 2;
+		double z = (boundingBox[MIN_Z] + boundingBox[MAX_Z]) / 2;
 		
 		System.out.println("Bounding box center: " + new Vector(x, y, z, 1).toString());
 		System.out.println();

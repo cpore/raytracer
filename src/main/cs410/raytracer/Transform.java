@@ -7,9 +7,9 @@ public class Transform {
 	public static final int z = 2;
 	public static final int w = 3;
 
-	public float[][] matrix;
+	public double[][] matrix;
 
-	public Transform(float[][] transformMatrix) {
+	public Transform(double[][] transformMatrix) {
 		this.matrix = transformMatrix;
 	}
 
@@ -20,7 +20,7 @@ public class Transform {
 	 * @param that
 	 */
 	public Transform multiply(Transform that) {
-		float[][] result = new float[4][4];
+		double[][] result = new double[4][4];
 
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
@@ -37,7 +37,7 @@ public class Transform {
 	}
 
 	public void apply(Model m) {
-		float[][] result = new float[4][m.verticies[1].length];
+		double[][] result = new double[4][m.verticies[1].length];
 
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < m.verticies[1].length; j++) {
@@ -59,7 +59,7 @@ public class Transform {
 	 */
 	public Transform getTranspose() {
 
-		float[][] transpose = new float[4][4];
+		double[][] transpose = new double[4][4];
 
 		for (int i = 0; i < 4; i++)
 			for (int j = 0; j < 4; j++)

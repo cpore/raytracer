@@ -14,7 +14,7 @@ public class Progress {
         if(pixelCounter == 0){
             System.out.println("Reticulating Splines... " + (percent) + "% Complete.");
         }
-        int newPct = (int) (((float)++pixelCounter / (float)totalPixels) * 100f);
+        int newPct = (int) (((double)++pixelCounter / (double)totalPixels) * 100);
         if(newPct == 100){
             System.out.println("Reticulating Splines... " + (newPct) + "% Complete.");
 

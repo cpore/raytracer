@@ -8,7 +8,7 @@ public class CameraModel {
 
     Vector vup; // vector up
 
-    float d; // focal length
+    double d; // focal length
     
     Vector fpdn;
     
@@ -18,7 +18,7 @@ public class CameraModel {
 
     int minu, minv, maxu, maxv; // max/min coordinates of the view plane
 
-    public CameraModel(Vector fp, Vector lap, Vector vup, float d, int minu, int minv, int maxu,
+    public CameraModel(Vector fp, Vector lap, Vector vup, double d, int minu, int minv, int maxu,
             int maxv) {
 
         this.fp = fp;
@@ -63,8 +63,8 @@ public class CameraModel {
     
     
     public Vector getPixelPoint(int u, int v){
-        //float u1 = (float) (((float)minu + ((float)maxu-(float)minu) * ((float)u+0.5)) / (float)getWidth());
-        //float v1 = (float) (((float)minv + ((float)maxv-(float)minv) * ((float)v+0.5)) / (float)getHeight());
+        //double u1 = (double) (((double)minu + ((double)maxu-(double)minu) * ((double)u+0.5)) / (double)getWidth());
+        //double v1 = (double) (((double)minv + ((double)maxv-(double)minv) * ((double)v+0.5)) / (double)getHeight());
         
         Vector uU = U.multiply(u);
         Vector vV = V.multiply(v);

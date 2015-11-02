@@ -5,17 +5,17 @@ public class RGB {
     public final static int r = 0;
     public final static int g = 1;
     public final static int b = 2;
-    float[] rgb;
+    double[] rgb;
     
     /**
      * Creates a new black pixel
      */
     public RGB(){
-        rgb = new float[3];
+        rgb = new double[3];
     }
     
-    public RGB(float r, float g, float b){
-        rgb = new float[3];
+    public RGB(double r, double g, double b){
+        rgb = new double[3];
         rgb[RGB.r] = r;
         rgb[RGB.g] = g;
         rgb[RGB.b] = b;
@@ -30,34 +30,34 @@ public class RGB {
         return String.format("%3d %3d %3d", Math.round(rgb[r]), Math.round(rgb[g]), Math.round(rgb[b]));
     }
 
-    public float getMinVal(){
+    public double getMinVal(){
         return Math.min(Math.min(rgb[r], rgb[g]), rgb[b]);
     }
     
-    public float getMaxVal(){
+    public double getMaxVal(){
         return Math.max(Math.max(rgb[r], rgb[g]), rgb[b]);
     }
     
     public RGB add(RGB that){
-        float rr = this.rgb[r] + that.rgb[r];
-        float gg = this.rgb[g] + that.rgb[g];
-        float bb = this.rgb[b] + that.rgb[b];
+        double rr = this.rgb[r] + that.rgb[r];
+        double gg = this.rgb[g] + that.rgb[g];
+        double bb = this.rgb[b] + that.rgb[b];
         
         return new RGB(rr, gg, bb);
     }
     
     public RGB multiply(RGB that){
-        float rr = this.rgb[r] * that.rgb[r];
-        float gg = this.rgb[g] * that.rgb[g];
-        float bb = this.rgb[b] * that.rgb[b];
+        double rr = this.rgb[r] * that.rgb[r];
+        double gg = this.rgb[g] * that.rgb[g];
+        double bb = this.rgb[b] * that.rgb[b];
         
         return new RGB(rr, gg, bb);
     }
     
-    public RGB multiply(float s){
-        float rr = this.rgb[r] * s;
-        float gg = this.rgb[g] * s;
-        float bb = this.rgb[b] * s;
+    public RGB multiply(double s){
+        double rr = this.rgb[r] * s;
+        double gg = this.rgb[g] * s;
+        double bb = this.rgb[b] * s;
         
         return new RGB(rr, gg, bb);
     }

@@ -75,7 +75,7 @@ public class TestRayTracer {
     public void testPyramid() {
         String[] args = new String[]{"src/cameras/pyramidcam1","src/materials/props1", "src/models/pyramid_big.ply", "src/testoutput/pyramid.ppm"};
 
-        RayTracer.main(args);
+        runRayTracer(args);
     }
 
     @Test

@@ -10,10 +10,10 @@ public class Image {
     int minu, minv;
     Progress progress;
     
-    final float MIN = 0.0f;
-    final float MAX = 255.0f;
-    float minVal = 1.0f;
-    float maxVal = 0.0f;
+    final double MIN = 0.0;
+    final double MAX = 255.0;
+    double minVal = 1.0;
+    double maxVal = 0.0;
     
     public Image(int height, int width, int minu, int minv){
         pixels = new RGB[height][width];
@@ -36,9 +36,9 @@ public class Image {
         int y = v - minv; 
         
         //System.out.println("filling pixel: (" + u + ", " + v + ") at index: " + y + ", " + x +")");
-        float minColor = color.getMinVal();
+        double minColor = color.getMinVal();
         if(minColor < minVal) minVal = minColor;
-        float maxColor = color.getMaxVal();
+        double maxColor = color.getMaxVal();
         if(maxColor > maxVal) maxVal = maxColor;
         
         pixels[y][x] = color;
