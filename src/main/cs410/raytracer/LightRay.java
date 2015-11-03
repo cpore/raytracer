@@ -4,64 +4,55 @@ public class LightRay extends Ray{
     
     Vector Lp; //vector from the first Ray's POI to the light source
     Vector R; // the reflected ray from Lp around the surface normal
+    Vector V;
 
     public LightRay(Vector L, Vector U, Vector Lp, Vector R) {
         super(L, U);
         this.Lp = Lp;
         this.R = R;
+        this.V = U.multiply(-1);
     }
     
     public boolean isOccluded(LightSource ls, Face f){
         return Lp.dotProduct(f.N) < 0.0;
     }
     
-    /**
-     * finds where the Ray intersects the plane that the face is in.
-     * @param f
-     * @return
-     */
-    @Override
-    protected Vector getPointOfIntersection(Face f){
+    public double getT(Vector P, Vector ls, Face f){
         // find the point of intersection (P) of the plane this face is in
         double d = -f.N.dotProduct(f.verticies[0]);
         //d = Math.abs(d);
 
         // what if this is zero?
-        double nDotU = f.N.dotProduct(U);
-        double nDotL = f.N.dotProduct(L);
+        double nDotU = f.N.dotProduct(Lp);
+        double nDotL = f.N.dotProduct(P);
 
-        if(nDotU == 0.0){
-            //System.out.println("nDotU = " + nDotU);
-            return null;
+        if(nDotU == 0.0 || Double.isNaN(nDotU)){
+            return Double.NaN;
         }
         
-
-        if(Double.isNaN(nDotU)){
-            //System.out.println("nDotU = " + nDotU);
-            return null;
-        }
-
         double t = (-(d + nDotL)) / (nDotU);
-
-        //if(double.isNaN(t) || double.isInfinite(t)) System.out.println("t = " + t);
+        
+        return t;
+    }
+    
+    public Vector getPointOfIntersection(Vector P, Vector lightSource, Face f){
+        double t = getT(P, lightSource, f);
+        // POI is on or behind image plane
         //t must be > 1 to use
-   
-        if(t > 0.0 || Double.isNaN(t)){
+        if(Double.isNaN(t) || t == 0.0){
             //System.out.println("t = " + t);
             return null;
         }
 
-        Vector P = L.add(U.multiply(t));
-        return P;
+        Vector P2 = P.add(lightSource.multiply(t));
+        return P2;
     }
     
-    
-    @Override
-    public boolean intersectsPolygon(Face f){
-        Vector P = getPointOfIntersection(f);
+    public boolean intersectsPolygon(Vector P, Vector lightSource, Face f){
+        Vector P2 = getPointOfIntersection(P, lightSource, f);
 
         // the point of intersection is inside of or behind the camera, so ignore
-        if(P == null){
+        if(P2 == null){
             return false;
         }
 
@@ -79,12 +70,10 @@ public class LightRay extends Ray{
             Vector Np = e1.crossProduct(epv1);
 
             double result = f.N.dotProduct(Np);
-            //System.out.println("result = " + result);
-            //if(result < 0.0f) return false;
 
             // if result >= 0 it is on the correct side
             //give it some leeway to fill holes
-            if(result < -0.01) return false;
+            if(result < -0.001) return false;
 
         }
 

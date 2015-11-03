@@ -61,7 +61,7 @@ public class TestRayTracer {
         long start = getStart();
         RayTracer.main(args);
         printElapsed(start);
-        openViewer(args[3]);
+        openViewer(args[args.length-1]);
     }
 
     @Test
@@ -103,6 +103,13 @@ public class TestRayTracer {
         String[] args = new String[]{"src/cameras/beethoven_cow_cam1", "src/materials/props1", "src/models/beethoven_big.ply", "src/models/cow_big.ply", "src/testoutput/beethoven_cow.ppm"};
 
         RayTracer.main(args);
+    }
+    
+    @Test
+    public void testBeethovenSphereShadowed() {
+        String[] args = new String[]{"src/cameras/beethoven_sphere_shadowedcam1", "src/materials/props1", "src/models/beethoven_big.ply", "src/models/sphere_shadowed.ply", "src/testoutput/beethoven_sphere_shadowed.ppm"};
+
+        runRayTracer(args);
     }
 
     @Test

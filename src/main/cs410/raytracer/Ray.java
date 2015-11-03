@@ -15,7 +15,20 @@ public class Ray {
      * @param f
      * @return
      */
-    protected Vector getPointOfIntersection(Face f){
+    public Vector getPointOfIntersection(Face f){
+        double t = getT(f);
+        // POI is on or behind image plane
+        //t must be > 1 to use
+        if(Double.isNaN(t) || t <= 1.0){
+            //System.out.println("t = " + t);
+            return null;
+        }
+
+        Vector P = L.add(U.multiply(t));
+        return P;
+    }
+    
+    public double getT(Face f){
         // find the point of intersection (P) of the plane this face is in
         double d = -f.N.dotProduct(f.verticies[0]);
         //d = Math.abs(d);
@@ -24,35 +37,12 @@ public class Ray {
         double nDotU = f.N.dotProduct(U);
         double nDotL = f.N.dotProduct(L);
 
-        /* if(double.compare(nDotU, 0.0f) == 0){
-            //System.out.println("nDotU = " + nDotU);
-            return null;
-        }*/
-
-        
-        if(nDotU == 0.0){
-            //System.out.println("nDotU = " + nDotU);
-            return null;
+        if(nDotU == 0.0 || Double.isNaN(nDotU)){
+            return Double.NaN;
         }
         
-
-        if(Double.isNaN(nDotU)){
-            //System.out.println("nDotU = " + nDotU);
-            return null;
-        }
-
         double t = (-(d + nDotL)) / (nDotU);
-
-        //if(double.isNaN(t) || double.isInfinite(t)) System.out.println("t = " + t);
-        //t must be > 1 to use
-   
-        if(t <= 1.0 || Double.isNaN(t)){
-            //System.out.println("t = " + t);
-            return null;
-        }
-
-        Vector P = L.add(U.multiply(t));
-        return P;
+        return t;
     }
     
     public LightRay getLightRay(LightSource ls, Face f){
@@ -67,7 +57,7 @@ public class Ray {
         Vector P = getPointOfIntersection(f);
         Vector Lp = ls.position.subtract(P).getNormalized();
         
-        Vector R = Lp.add(f.N.multiply(2.0 * Lp.dotProduct(f.N)).subtract(Lp)).getNormalized();
+        Vector R = f.N.multiply(2 * Lp.dotProduct(f.N)).subtract(Lp).getNormalized();
         
         return new LightRay(L, U, Lp, R);
         
@@ -95,8 +85,6 @@ public class Ray {
             Vector Np = e1.crossProduct(epv1);
 
             double result = f.N.dotProduct(Np);
-            //System.out.println("result = " + result);
-            //if(result < 0.0f) return false;
 
             // if result >= 0 it is on the correct side
             //give it some leeway to fill holes
@@ -131,11 +119,6 @@ public class Ray {
         
         double discriminant = (UdotTSquared - TdotT) + rSquared;
 
-        /*if(discriminant >= 0.0){
-            
-        }else{
-            System.out.println("discriminant = " + discriminant);
-        }*/
         return discriminant >= 0.0;
     }
 
