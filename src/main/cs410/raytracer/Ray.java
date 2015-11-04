@@ -46,20 +46,22 @@ public class Ray {
     }
     
     public LightRay getLightRay(LightSource ls, Face f){
-        Vector V = U.multiply(-1);
+        Vector V = U.multiply(-1.0);
         
         //todo should we create a copy of f.N or replace it?
         //Vector fN = new Vector(f.N);
         if(f.N.dotProduct(V) < 0.0){
-            f.N = f.N.multiply(-1);
+            f.N = f.N.multiply(-1.0);
         }
         
         Vector P = getPointOfIntersection(f);
-        Vector Lp = ls.position.subtract(P).getNormalized();
+        Vector Lp = ls.position.subtract(P);
         
-        Vector R = f.N.multiply(2 * Lp.dotProduct(f.N)).subtract(Lp).getNormalized();
+        Vector LpNormal = Lp.getNormalized();
         
-        return new LightRay(L, U, Lp, R);
+        Vector R = f.N.multiply(2.0 * LpNormal.dotProduct(f.N)).subtract(LpNormal).getNormalized();
+        
+        return new LightRay(P, Lp, R, V);
         
     }
 
@@ -88,7 +90,7 @@ public class Ray {
 
             // if result >= 0 it is on the correct side
             //give it some leeway to fill holes
-            if(result < -0.001) return false;
+            if(result < -0.01) return false;
 
         }
 
@@ -107,7 +109,7 @@ public class Ray {
                 rSquared = radius;
             }
         }
-        //System.out.println("Radius = " + r);
+        
         rSquared *= rSquared;
         
         Vector T = Pc.subtract(L);

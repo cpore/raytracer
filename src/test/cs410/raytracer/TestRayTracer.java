@@ -1,8 +1,6 @@
 package cs410.raytracer;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -41,15 +39,24 @@ public class TestRayTracer {
     }
     
     private void openViewer(String outputfile){
-        if(outputfile != null){
-            Runtime r = Runtime.getRuntime();
-            try {
-                Process p = r.exec("eog " + outputfile);
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
+    	if(outputfile == null) return;
+		String OS = System.getProperty("os.name").toLowerCase();
+		if(OS.indexOf("win") >= 0) {
+			/*try {
+    				Process p = r.exec("src/OpenSeeIt/OpenSeeIt.exe " + outputfile);
+    			} catch (IOException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}*/
+		}else {
+			try {
+				Runtime r = Runtime.getRuntime();
+				r.exec("eog " + outputfile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
     }
 
     @After
@@ -108,6 +115,13 @@ public class TestRayTracer {
     @Test
     public void testBeethovenSphereShadowed() {
         String[] args = new String[]{"src/cameras/beethoven_sphere_shadowedcam1", "src/materials/props1", "src/models/beethoven_big.ply", "src/models/sphere_shadowed.ply", "src/testoutput/beethoven_sphere_shadowed.ppm"};
+
+        runRayTracer(args);
+    }
+    
+    @Test
+    public void testBeethovenSphereShadowedSmall() {
+        String[] args = new String[]{"src/cameras/beethoven_sphere_shadowedcam1", "src/materials/props1", "src/models/beethoven_big.ply", "src/models/sphere_shadowed_small.ply", "src/testoutput/beethoven_sphere_shadowed_small.ppm"};
 
         runRayTracer(args);
     }

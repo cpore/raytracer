@@ -71,10 +71,10 @@
 	     excludes="bin/**, .*, PA1.tar, src/test/**, src/models/**, src/testoutput/**, src/testreport/**, readme.md, src/libs/**" />
 	</target>
 	
-	<target name="PA2tar">
-		<tar destfile="${basedir}/PA2.tar"
+	<target name="tar">
+		<tar destfile="${basedir}/PA3.tar"
 		     basedir="${basedir}"
-		     excludes="src/cameramodels/** jar/**, bin/**, .*, PA1.tar, PA2.tar, src/test/**, src/models/**, src/testoutput/**, src/testreport/**, readme.md, src/libs/**" />
+		     excludes="src/cameramodels/** jar/**, bin/**, .*, PA1.tar, PA2.tar, PA3.tar, src/test/**, src/models/**, src/testoutput/**, src/testreport/**, readme.md, src/libs/**" />
 		</target>
 
 	<!-- Run the JUnit Tests -->

@@ -1,7 +1,6 @@
 package cs410.raytracer;
 
 public class Face {
-    
 	
 	int[] vertexIndicies;
 	
@@ -12,7 +11,6 @@ public class Face {
 	//diffuse (Lambertian) reflection values
 	RGB Kd = new RGB(0.5, 0.5, 0.5);
 
-	
 	//specular reflection values
 	double ks = 0.0;
 	int alpha = 1;
@@ -32,11 +30,6 @@ public class Face {
             
             N = getN(a, b, c);
             if(N != null) break;
-            
-            //System.out.print("a = " + a.toString() + ", ");
-            //System.out.print("b = " + b.toString() + ", ");
-            //System.out.println("c = " + c.toString());
-            
         }
         
         if(N == null){

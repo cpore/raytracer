@@ -79,8 +79,6 @@ public class ViewModel {
 
                         if(!(hit = ray.intersectsPolygon(f))) continue;
 
-
-
                         //Calculate color along ray
                         //(color of light ray) 
                         RGB lightSum = new RGB();
@@ -93,7 +91,8 @@ public class ViewModel {
                             LightRay lightRay = ray.getLightRay(ls, f);
 
                             // check for self-occlusion (light is behind face)
-                            if(lightRay.isOccluded(ls, f)){
+                            if(lightRay.isOccluded(f)){
+                                //System.out.println("occluded");
                                 //isOccluded = true;
                                 continue;
                             }
@@ -103,36 +102,27 @@ public class ViewModel {
                                 for(Face f2: m2.faces){
                                     // make sure we don't check face against itself
                                     if(f2.equals(f)) continue;
-                                    
+
                                     // check if this is the front polygon to hit the ray
-                                    if(!ray.intersectsPolygon(f2)) continue;
-
-                                    shadowed = ray.getT(f) > ray.getT(f2);
-
+                                    if(ray.intersectsPolygon(f2)){ 
+                                        shadowed = ray.getT(f) > ray.getT(f2);
+                                    }
+                                    
                                     if(shadowed){
                                         isBehind = true;
                                         break;
                                     }
-
-                                    // This IS the front polygon so
-                                    // check if light source is shadowed by another polygon
-                                    Vector poiF = ray.getPointOfIntersection(f);
-                                    //double tf = lightRay.getT(poiF, ls.position);
-                                    //double tf2 = lightRay.getT(poiF, f2.verticies[0]);
                                     
-                                    shadowed =  lightRay.intersectsPolygon(poiF, ls.position, f2);
-                                    //System.out.println(tf + ", " + tf2);
-                                    //Vector poiF2 = ray.ge
-                                    
-                                   //shadowed = lightRay.intersectsPolygon(f2);
-
-                                    if(shadowed){
-                                        System.out.println("shadowed");
-                                        //isShadowed = true;
+                                    if(lightRay.intersectsPolygon(f2)){
+                                        shadowed = true;
+                                        if(lightRay.getT(f) < lightRay.getT(f2)){
+                                            //System.out.println("behind");
+                                            isBehind = true;
+                                        }
                                         break;
                                     }
                                 }
-                                
+
                                 if(shadowed){
                                     break;
                                 }
@@ -141,31 +131,27 @@ public class ViewModel {
                             if(shadowed) continue;
 
                             // light source is not occluded or shadowed, so we can add the color
-                            RGB diffuse = f.Kd.multiply(ls.B.multiply(Math.max(0, lightRay.Lp.dotProduct(f.N))));
+                            RGB diffuse = f.Kd.multiply(ls.B.multiply(Math.max(0, lightRay.U.dotProduct(f.N))));
                             RGB specular = ls.B.multiply(Math.pow(Math.max(0, lightRay.V.dotProduct(lightRay.R)), f.alpha)).multiply(f.ks);
-                           
-                            /*if(specular.rgb[RGB.r] != 0.0f || specular.rgb[RGB.g] != 0.0f || specular.rgb[RGB.b] != 0.0f)
-                                System.out.println("Specular= " + specular.printRaw());
-                            /*if(diffuse.rgb[RGB.r] != 0.0f || diffuse.rgb[RGB.g] != 0.0f || diffuse.rgb[RGB.b] != 0.0f)
-                                System.out.println("Diffuse= " + diffuse.printRaw());
-                             */
-                            
+
+                            //if(specular.rgb[RGB.r] != 0.0f || specular.rgb[RGB.g] != 0.0f || specular.rgb[RGB.b] != 0.0f)
+                            //    System.out.println("Specular= " + specular.printRaw());
+                            //if(diffuse.rgb[RGB.r] != 0.0f || diffuse.rgb[RGB.g] != 0.0f || diffuse.rgb[RGB.b] != 0.0f)
+                            //    System.out.println("Diffuse= " + diffuse.printRaw());
+
                             lightSum = lightSum.add(diffuse.add(specular));
-                        }
-                        
-                        if(!isBehind){
-                            RGB KdBa = f.Kd.multiply(ambient.B);
-                            RGB Il = KdBa.add(lightSum);
-                            I = I.add(Il);
                         }
 
                         //we know this pixel hit at least one face in this model,
                         //and it is the very front face,
                         //so we don't need to check the rest of the models
-                        if(hit && !isBehind){
-                            break;
+                        if(!isBehind){
+                            RGB KdBa = f.Kd.multiply(ambient.B);
+                            RGB Il = KdBa.add(lightSum);
+                            I = I.add(Il);
+                            //break;
                         }
-
+                        
                     }
                     //we know this pixel hit at least one face in this model,
                     //so we don't need to check the rest of the models
