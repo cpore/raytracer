@@ -90,7 +90,7 @@ public class Ray {
 
             // if result >= 0 it is on the correct side
             //give it some leeway to fill holes
-            if(result < -0.01) return false;
+            if(result < -0.000001) return false;
 
         }
 

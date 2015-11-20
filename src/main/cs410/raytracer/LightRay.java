@@ -13,7 +13,7 @@ public class LightRay extends Ray{
         this.V = V;
     }
 
-    public boolean isOccluded(Face f){
+    public boolean isSelfOccluded(Face f){
         return U.dotProduct(f.N) < 0.0;
     }
 
