@@ -59,40 +59,55 @@ public class ViewModel {
     private void rayTraceSection(int minu, int maxu, int minv, int maxv) {
         for(int u = minu; u <= maxu; u++){
             for(int v = minv; v <= maxv; v++){
-
-                RGB I = new RGB();
+                
                 //Throw ray from FP to pixel
                 Vector L = cameraModel.getPixelPoint(u, v);
                 Vector U = cameraModel.getUnit(L);
 
                 Ray ray = new Ray(L, U);
 
-                for(Model m: modelList){
-                    for(Face f: m.faces){
-
-                        // check if ray hits a polygon
-                        if(!ray.intersectsSphere(f)) continue;
-
-                        if(!ray.intersectsPolygon(f)) continue;
-
-                        if(!isFrontFace(ray, f)) continue;
-
-                        //Calculate color along ray
-                        //(color of light ray) 
-                        RGB Il = calculateColor(ray, f);
-                        I = I.add(Il);
-                        break;
-                    }
-                }
+                RGB I = calculateColor(ray);
                 
                 //Fill in pixel
                 image.fillPixel(u, v, I);
             }
         }
     }
+
+    private RGB calculateColor(Ray ray) {
+        RGB I = new RGB();
+        boolean isFront = false;
+        for(Model m: modelList){
+            for(Face f: m.faces){
+             // check if ray hits a polygon
+                if(!ray.intersectsSphere(f) || !ray.intersectsPolygon(f)){
+                    continue;
+                }
+                //Calculate color along ray
+                //(color of light ray) 
+                if(isFrontFace(ray, f)){
+                    isFront = true;
+                    I = reflection(new RGB(), ray, f, 0);
+                }
+                if(isFront) break;
+            }
+            if(isFront) break;
+        }
+        
+        return I;
+    }
     
-    private RGB calculateColor(Ray ray, Face f){
-        RGB lightSum = new RGB();
+    private RGB reflection(RGB lightSum, Ray ray, Face f, int count){
+        //TODO need to check ALL faces not just f!!!! 
+        
+        // check if ray hits a polygon
+        if(!ray.intersectsSphere(f) || !ray.intersectsPolygon(f)){
+            return lightSum;
+        }
+        
+        if(count == 20) return lightSum;
+        
+        lightSum = f.Kd.multiply(ambient.B);
 
         for(LightSource ls: lightSources){
 
@@ -111,9 +126,12 @@ public class ViewModel {
 
             lightSum = lightSum.add(diffuse.add(specular));
         }
-        RGB KdBa = f.Kd.multiply(ambient.B);
-        RGB Il = KdBa.add(lightSum);
-        return Il;
+
+        Ray reflectedRay = new Ray(ray.getPointOfIntersection(f), ray.getRv(f));
+        RGB reflection = reflection(lightSum, reflectedRay, f, ++count).multiply(f.ks);
+        
+        
+        return lightSum.add(reflection);
     }
 
     private boolean isFrontFace(Ray ray, Face f) {

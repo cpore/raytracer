@@ -14,6 +14,9 @@ public class Face {
 	//specular reflection values
 	double ks = 0.0;
 	int alpha = 1;
+	
+	// translucency value
+	double kt = 0.0;
 
 	public Face(int[] vertexIndicies, Vector[] verticies) throws InvalidFormatException {
         this.vertexIndicies = vertexIndicies;
@@ -62,6 +65,10 @@ public class Face {
         this.ks = ks;
         this.alpha = alpha;
 	}
+	
+	public void setTranslucency(double kt){
+        this.kt = kt;
+    }
 
 	@Override
 	public String toString() {

@@ -46,7 +46,7 @@ public class Ray {
     }
     
     public LightRay getLightRay(LightSource ls, Face f){
-        Vector V = U.multiply(-1.0);
+        Vector V = getV();
         
         //todo should we create a copy of f.N or replace it?
         //Vector fN = new Vector(f.N);
@@ -63,6 +63,15 @@ public class Ray {
         
         return new LightRay(P, Lp, R, V);
         
+    }
+    
+    public Vector getV(){
+        return U.multiply(-1.0);
+    }
+    
+    public Vector getRv(Face f){
+        Vector V = getV();
+        return f.N.multiply(2.0 * V.dotProduct(f.N)).subtract(V).getNormalized();
     }
 
     public boolean intersectsPolygon(Face f){

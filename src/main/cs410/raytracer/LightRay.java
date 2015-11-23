@@ -5,6 +5,7 @@ public class LightRay extends Ray{
     Vector Lp; // full vector from the first Ray's POI to the light source
     Vector R; // the reflected ray from Lp around the surface normal
     Vector V;
+    Vector Rv; // the reflected ray from the viewing ray, V
 
     public LightRay(Vector L, Vector U, Vector R, Vector V) {
         super(L, U.getNormalized());

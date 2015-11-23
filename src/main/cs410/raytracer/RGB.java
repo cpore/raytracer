@@ -5,6 +5,7 @@ public class RGB {
     public final static int r = 0;
     public final static int g = 1;
     public final static int b = 2;
+    public final static double threshold = 0.001953125;
     double[] rgb;
     
     /**
@@ -60,5 +61,9 @@ public class RGB {
         double bb = this.rgb[b] * s;
         
         return new RGB(rr, gg, bb);
+    }
+    
+    public boolean belowThreshold(){
+        return rgb[r] < threshold || rgb[g] < threshold || rgb[b] < threshold;
     }
 }
