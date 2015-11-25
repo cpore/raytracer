@@ -24,7 +24,7 @@ public class LightRay extends Ray{
 
         // POI is on or behind image plane
         //t must be > 0 to use
-        if(t < 0.01 || t > Lp.getMagnitude() || Double.isNaN(t)){
+        if(t < 0.00001 || t > Lp.getMagnitude() || Double.isNaN(t)){
 
             return null;
         }

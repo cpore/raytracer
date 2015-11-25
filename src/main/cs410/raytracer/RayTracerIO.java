@@ -317,6 +317,8 @@ public class RayTracerIO {
         while ((line = br.readLine()) != null) {
             String[] parts = line.trim().split("\\s+");
 
+            if(line.isEmpty()) continue;
+            
             switch (parts[0].trim().charAt(0)) {
             case 'L':
                 System.out.println(line);
@@ -353,12 +355,15 @@ public class RayTracerIO {
                 double kb = Double.parseDouble(parts[6].trim());
                 double ks = Double.parseDouble(parts[7].trim());
                 int alpha = Integer.parseInt(parts[8].trim());
+                double kt = Double.parseDouble(parts[9].trim());
 
                 Model model = models.get(modelIdx);
                 for (int i = firstPolygon; i <= lastPolygon; i++) {
+                    if(i == model.faces.length) break;
                     Face face = model.faces[i];
                     face.setDiffuseReflectance(kr, kg, kb);
                     face.setSpecularReflectance(ks, alpha);
+                    face.setTranslucency(kt);
                 }
                 break;
             default:

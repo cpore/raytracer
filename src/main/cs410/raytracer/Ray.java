@@ -49,9 +49,9 @@ public class Ray {
         Vector V = getV();
         
         //todo should we create a copy of f.N or replace it?
-        //Vector fN = new Vector(f.N);
+        Vector fN = new Vector(f.N);
         if(f.N.dotProduct(V) < 0.0){
-            f.N = f.N.multiply(-1.0);
+            fN = f.N.multiply(-1.0);
         }
         
         Vector P = getPointOfIntersection(f);
@@ -59,7 +59,7 @@ public class Ray {
         
         Vector LpNormal = Lp.getNormalized();
         
-        Vector R = f.N.multiply(2.0 * LpNormal.dotProduct(f.N)).subtract(LpNormal).getNormalized();
+        Vector R = fN.multiply(2.0 * LpNormal.dotProduct(fN)).subtract(LpNormal).getNormalized();
         
         return new LightRay(P, Lp, R, V);
         

@@ -191,5 +191,28 @@ public class TestRayTracer {
 
         runRayTracer(args);
     }
+    
+    @Test
+    public void testSphereInCube() {
+        String outputfile = "src/testoutput/sphere_in_cube.ppm";
+        String cameraFile = "src/cameras/sphere_in_cube";
+        String materialFile = "src/materials/sphere_in_cube";
+        String modelFile1 = "src/models/sphere.ply";
+        String modelFile2 = "src/models/cube1.ply";
+        String[] args = new String[]{cameraFile, materialFile, modelFile1, modelFile2, outputfile};
+
+        runRayTracer(args);
+    }
+    
+    @Test
+    public void testCube() {
+        String outputfile = "src/testoutput/cube1.ppm";
+        String cameraFile = "src/cameras/sphere_in_cube";
+        String materialFile = "src/materials/props1";
+        String modelFile2 = "src/models/cube1.ply";
+        String[] args = new String[]{cameraFile, materialFile, modelFile2, outputfile};
+
+        runRayTracer(args);
+    }
 
 }
