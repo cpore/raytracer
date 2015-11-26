@@ -62,7 +62,7 @@ public class CameraModel {
     
     
     
-    public Vector getPixelPoint(int u, int v){
+    public Vector getPixelPoint(double u, double v){
         //double u1 = (double) (((double)minu + ((double)maxu-(double)minu) * ((double)u+0.5)) / (double)getWidth());
         //double v1 = (double) (((double)minv + ((double)maxv-(double)minv) * ((double)v+0.5)) / (double)getHeight());
         

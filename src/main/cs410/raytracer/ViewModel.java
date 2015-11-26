@@ -2,6 +2,7 @@ package cs410.raytracer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class ViewModel {
 
@@ -57,31 +58,49 @@ public class ViewModel {
     }
 
     private void rayTraceSection(int minu, int maxu, int minv, int maxv) {
+        Random r = new Random();
         for(int u = minu; u <= maxu; u++){
             for(int v = minv; v <= maxv; v++){
 
-                //Throw ray from FP to pixel
-                Vector L = cameraModel.getPixelPoint(u, v);
-                Vector U = cameraModel.getUnit(L);
+                ArrayList<RGB> avg = new ArrayList<RGB>();
+                for(int i=0; i<1; i++){
+                    double r1 = r.nextDouble() - 0.5;
+                    double r2 = r.nextDouble() - 0.5;
+                    //Throw ray from FP to pixel
+                    Vector L = cameraModel.getPixelPoint(u + r1, v + r2);
+                    Vector U = cameraModel.getUnit(L);
 
-                Ray ray = new Ray(L, U);
+                    Ray ray = new Ray(L, U);
 
-                RGB I = calculateColor(ray, new RGB(), 0);
+                    RGB I = calculateColor(ray, new RGB(), 0);
+                    avg.add(i, I);
+
+                }
 
                 //Fill in pixel
-                image.fillPixel(u, v, I);
+                image.fillPixel(u, v, getAverage(avg));
             }
         }
     }
+    
+    private RGB getAverage(ArrayList<RGB> avg){
+        double r = 0.0, g = 0.0, b = 0.0;
+        for(RGB rgb: avg){
+            r += rgb.rgb[RGB.r];
+            g += rgb.rgb[RGB.g];
+            b += rgb.rgb[RGB.b];
+        }
+        return new RGB(r/avg.size(), g/avg.size(), b/avg.size());
+    }
 
     private RGB calculateColor(Ray ray, RGB lightSum, int count) {
-        
+
         if(count++ == 20) return lightSum;
 
         Face f = intersects(ray);
         if(f == null) return lightSum;
 
-        lightSum = f.Kd.multiply(ambient.B);
+        if(count == 1) lightSum = f.Kd.multiply(ambient.B);
 
         for(LightSource ls: lightSources){
 
@@ -102,17 +121,19 @@ public class ViewModel {
         }
 
         //System.out.println("count = " + count);
-        if(f.ks > 0.0){
+        if(f.ks > -0.0001){
             Ray reflectedRay = new Ray(ray.getPointOfIntersection(f), ray.getRv(f));
             lightSum = lightSum.add(calculateColor(reflectedRay, lightSum, count).multiply(f.ks));
         }
 
-       /* if(f.kt > 0.0){
-            Ray refractedRay = new Ray(ray.getPointOfIntersection(f), ray.getV());
+        if(lightSum.belowThreshold()) return lightSum;
+        
+        if(f.kt > -0.0001){
+            Ray refractedRay = new Ray(ray.getPointOfIntersection(f), ray.getV().multiply(-1));
             lightSum = lightSum.add(calculateColor(refractedRay, lightSum, count).multiply(f.kt));
-        }*/
+        }
 
-        //if(lightSum.belowThreshold()) return lightSum;
+        if(lightSum.belowThreshold()) return lightSum;
 
         return lightSum;
     }
@@ -140,47 +161,55 @@ public class ViewModel {
         double closestT = Double.MAX_VALUE;
         for(Model m: modelList){
             for(Face f2: m.faces){
-             // make sure we don't check face against itself
+                // make sure we don't check face against itself
                 if(f2.equals(f)) continue;
-                
+
                 // check if this is the front polygon to hit the ray
                 if(!ray.intersectsSphere(f2) || !ray.intersectsPolygon(f2)){
                     continue;
                 }
-                    
-                if(ray.getT(f2) < closestT){
+
+                if(ray.getT(f2) <= closestT){
                     closestT = ray.getT(f2);
                 }
-                
+
             }
         }
         return ray.getT(f) <= closestT;
     }
 
     private boolean isShadowed(LightRay lightRay, Face f){
-        
+
         // check for self-occlusion (light is behind face)
-        if(lightRay.isSelfOccluded(f)) return true;
-        
+        if(lightRay.isSelfOccluded(f)){
+            //System.out.println("Self Occluded");
+            return true;
+        }else{
+            //System.out.println("Not Self Occluded");
+        }
+
         //double closestT = Double.MAX_VALUE;
 
         for(Model m: modelList){
             for(Face f2: m.faces){
                 // make sure we don't check face against itself
                 if(f2.equals(f)) continue;
+                
+                //if(!isFrontFace(lightRay, f2)) continue;
 
                 if(!lightRay.intersectsPolygon(f2)){
                     continue;
                 }
-                
-                //if(f2.kt > -0.0001) continue;
+
+                if(f2.kt > -0.0001) continue;
 
                 if(lightRay.getT(f2) > lightRay.getT(f)){
+                    //System.out.println("Shadowed");
                     return true;
                 }
             }
         }
-        
+
         return false;//closestT <= lightRay.getT(f);
     }
 
