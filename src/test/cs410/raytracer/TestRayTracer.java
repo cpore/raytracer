@@ -199,7 +199,8 @@ public class TestRayTracer {
         String materialFile = "src/materials/sphere_in_cube";
         String modelFile1 = "src/models/sphere.ply";
         String modelFile2 = "src/models/cube1.ply";
-        String[] args = new String[]{cameraFile, materialFile, modelFile1, modelFile2, outputfile};
+        String modelFile3 = "src/models/cube_big.ply";
+        String[] args = new String[]{cameraFile, materialFile, modelFile1, modelFile2, modelFile3, outputfile};
 
         runRayTracer(args);
     }

@@ -63,16 +63,21 @@ public class ViewModel {
             for(int v = minv; v <= maxv; v++){
 
                 ArrayList<RGB> avg = new ArrayList<RGB>();
-                for(int i=0; i<1; i++){
+                int numRays = 1;
+                for(int i=0; i<numRays; i++){
                     double r1 = r.nextDouble() - 0.5;
                     double r2 = r.nextDouble() - 0.5;
                     //Throw ray from FP to pixel
+                    if(numRays == 1){
+                        r1 = 0.0;
+                        r2 = 0.0;
+                    }
                     Vector L = cameraModel.getPixelPoint(u + r1, v + r2);
                     Vector U = cameraModel.getUnit(L);
 
                     Ray ray = new Ray(L, U);
 
-                    RGB I = calculateColor(ray, new RGB(), 0);
+                    RGB I = calculateColor(ray, new RGB(), 0, copyModel());
                     avg.add(i, I);
 
                 }
@@ -82,7 +87,7 @@ public class ViewModel {
             }
         }
     }
-    
+
     private RGB getAverage(ArrayList<RGB> avg){
         double r = 0.0, g = 0.0, b = 0.0;
         for(RGB rgb: avg){
@@ -93,24 +98,30 @@ public class ViewModel {
         return new RGB(r/avg.size(), g/avg.size(), b/avg.size());
     }
 
-    private RGB calculateColor(Ray ray, RGB lightSum, int count) {
-
+    private RGB calculateColor(Ray ray, RGB lightSum, int count, ArrayList<Model> world) {
+        if(count >= 20) return lightSum;
         if(count++ == 20) return lightSum;
 
-        Face f = intersects(ray);
+        Face f = intersects(ray, world);
         if(f == null) return lightSum;
 
-        if(count == 1) lightSum = f.Kd.multiply(ambient.B);
+        /*if(count == 1)*/ lightSum = lightSum.add(f.Kd.multiply(ambient.B));
+
 
         for(LightSource ls: lightSources){
 
             LightRay lightRay = ray.getLightRay(ls, f);
 
-            if(isShadowed(lightRay, f)) continue;
+            if(isShadowed(lightRay, f, world)) continue;
 
             // light source is not occluded or shadowed, so we can add the color
+            /*Vector fN = new Vector(f.N);
+            if(f.N.dotProduct(lightRay.V) < 0.0){
+                fN = f.N.multiply(-1.0);
+            }*/
             RGB diffuse = f.Kd.multiply(ls.B.multiply(Math.max(0, lightRay.U.dotProduct(f.N))));
             RGB specular = ls.B.multiply(Math.pow(Math.max(0, lightRay.V.dotProduct(lightRay.R)), f.alpha)).multiply(f.ks);
+
 
             /* if(specular.rgb[RGB.r] != 0.0f || specular.rgb[RGB.g] != 0.0f || specular.rgb[RGB.b] != 0.0f)
                             System.out.println("Specular= " + specular.printRaw());
@@ -121,33 +132,36 @@ public class ViewModel {
         }
 
         //System.out.println("count = " + count);
-        if(f.ks > -0.0001){
+        if(f.ks != 0.0){
             Ray reflectedRay = new Ray(ray.getPointOfIntersection(f), ray.getRv(f));
-            lightSum = lightSum.add(calculateColor(reflectedRay, lightSum, count).multiply(f.ks));
+            RGB product = calculateColor(reflectedRay, lightSum, count, world).multiply(f.ks);
+            if(product.belowThreshold()){
+                System.out.println("below");
+                return lightSum;
+            }
+            lightSum = lightSum.add(product);
         }
 
-        if(lightSum.belowThreshold()) return lightSum;
-        
-        if(f.kt > -0.0001){
+        if(f.kt != 0.0){
+            //System.out.println("sfas");
             Ray refractedRay = new Ray(ray.getPointOfIntersection(f), ray.getV().multiply(-1));
-            lightSum = lightSum.add(calculateColor(refractedRay, lightSum, count).multiply(f.kt));
+            lightSum = lightSum.add(calculateColor(refractedRay, lightSum, count, world).multiply(f.kt));
         }
-
-        if(lightSum.belowThreshold()) return lightSum;
 
         return lightSum;
     }
 
-    private Face intersects(Ray ray){
+    private Face intersects(Ray ray, ArrayList<Model> world){
 
-        for(Model m: modelList){
+
+        for(Model m: world){
             for(Face f: m.faces){
                 // check if ray hits a polygon
-                if(!ray.intersectsSphere(f) || !ray.intersectsPolygon(f)){
+                if(!ray.intersectsPolygon(f)){
                     continue;
                 }
 
-                if(!isFrontFace(ray, f)) continue;
+                if(!isFrontFace(ray, f, world)) continue;
 
                 return f;
             }
@@ -156,20 +170,29 @@ public class ViewModel {
         return null;
     }
 
+    private ArrayList<Model> copyModel(){
+        ArrayList<Model> copy = new ArrayList<Model>();
+        for(Model m: modelList) copy.add(m);
 
-    private boolean isFrontFace(Ray ray, Face f) {
+        return copy;
+    }
+
+
+    private boolean isFrontFace(Ray ray, Face f, ArrayList<Model> world) {
+        if(f.kt >= 1.0) return false;
+
         double closestT = Double.MAX_VALUE;
-        for(Model m: modelList){
+        for(Model m: world){
             for(Face f2: m.faces){
                 // make sure we don't check face against itself
                 if(f2.equals(f)) continue;
 
                 // check if this is the front polygon to hit the ray
-                if(!ray.intersectsSphere(f2) || !ray.intersectsPolygon(f2)){
+                if(!ray.intersectsPolygon(f2)){
                     continue;
                 }
 
-                if(ray.getT(f2) <= closestT){
+                if(ray.getT(f2) < closestT && f2.kt < 1.0){
                     closestT = ray.getT(f2);
                 }
 
@@ -178,7 +201,7 @@ public class ViewModel {
         return ray.getT(f) <= closestT;
     }
 
-    private boolean isShadowed(LightRay lightRay, Face f){
+    private boolean isShadowed(LightRay lightRay, Face f, ArrayList<Model> world){
 
         // check for self-occlusion (light is behind face)
         if(lightRay.isSelfOccluded(f)){
@@ -190,18 +213,18 @@ public class ViewModel {
 
         //double closestT = Double.MAX_VALUE;
 
-        for(Model m: modelList){
+        for(Model m: world){
             for(Face f2: m.faces){
                 // make sure we don't check face against itself
                 if(f2.equals(f)) continue;
-                
+
                 //if(!isFrontFace(lightRay, f2)) continue;
 
                 if(!lightRay.intersectsPolygon(f2)){
                     continue;
                 }
 
-                if(f2.kt > -0.0001) continue;
+                if(f2.kt != 0.0) continue;
 
                 if(lightRay.getT(f2) > lightRay.getT(f)){
                     //System.out.println("Shadowed");

@@ -1,10 +1,12 @@
 package cs410.raytracer;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 public class Model {
 	
-	//used to uniquely identify models
+	
+    //used to uniquely identify models
 	private UUID uuid = UUID.randomUUID();
 
 	
@@ -34,6 +36,30 @@ public class Model {
 		updateStats();
 
 	}
+	
+	public Model(Model m){
+        this.fileHeader = new String(m.fileHeader);
+        
+        double[][] nv = new double[m.verticies.length][m.verticies[0].length];
+        for (int i = 0; i < nv.length; i++)
+             nv[i] = Arrays.copyOf(m.verticies[i], m.verticies[i].length);
+        
+        this.verticies = nv;
+        
+        Face[] nf = new Face[m.faces.length];
+        nf = Arrays.copyOf(m.faces, m.faces.length);
+        
+        this.faces = nf;
+        
+        this.meanVertex = new Vector(m.meanVertex);
+       
+        double[] nbb = Arrays.copyOf(m.boundingBox, m.boundingBox.length);
+        this.boundingBox = nbb;
+        
+        this.uuid = new UUID(m.uuid.getMostSignificantBits(), m.uuid.getLeastSignificantBits());
+
+    }
+	
 	
 	/*public void combine(Model m){
 	    double[][] verticies =  new double[4][this.verticies[0].length + m.verticies[0].length];
