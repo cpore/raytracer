@@ -177,7 +177,7 @@ public class ViewModel {
 
 
     private boolean isFirstFace(Ray ray, Face f, ArrayList<Model> world) {
-        //if(f.kt >= 1.0) return false;
+        if(f.kt >= 1.0) return false;
 
         double closestT = Double.MAX_VALUE;
         for(Model m: world){
@@ -190,7 +190,7 @@ public class ViewModel {
                     continue;
                 }
 
-                if(ray.getT(f2) < closestT/* && f2.kt < 1.0*/){
+                if(ray.getT(f2) < closestT && f2.kt < 1.0){
                     closestT = ray.getT(f2);
                 }
 
