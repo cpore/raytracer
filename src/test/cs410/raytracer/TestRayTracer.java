@@ -193,14 +193,26 @@ public class TestRayTracer {
     }
     
     @Test
-    public void testSphereInCube() {
-        String outputfile = "src/testoutput/sphere_in_cube.ppm";
+    public void testSphereInCubeInRoom() {
+        String outputfile = "src/testoutput/sphere_in_cube_in_room.ppm";
         String cameraFile = "src/cameras/sphere_in_cube";
         String materialFile = "src/materials/sphere_in_cube";
         String modelFile1 = "src/models/sphere.ply";
         String modelFile2 = "src/models/cube1.ply";
         String modelFile3 = "src/models/cube_big.ply";
         String[] args = new String[]{cameraFile, materialFile, modelFile1, modelFile2, modelFile3, outputfile};
+
+        runRayTracer(args);
+    }
+    
+    @Test
+    public void testSphereInCube() {
+        String outputfile = "src/testoutput/sphere_in_cube.ppm";
+        String cameraFile = "src/cameras/sphere_in_cube";
+        String materialFile = "src/materials/sphere_in_cube";
+        String modelFile1 = "src/models/sphere.ply";
+        String modelFile2 = "src/models/cube1.ply";
+        String[] args = new String[]{cameraFile, materialFile, modelFile1, modelFile2, outputfile};
 
         runRayTracer(args);
     }

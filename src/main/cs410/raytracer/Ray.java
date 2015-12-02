@@ -29,6 +29,7 @@ public class Ray {
     }
     
     public double getT(Face f){
+                
         // find the point of intersection (P) of the plane this face is in
         double d = -f.N.dotProduct(f.verticies[0]);
         //d = Math.abs(d);
@@ -71,11 +72,8 @@ public class Ray {
     
     public Vector getRv(Face f){
         Vector V = getV();
-        Vector fN = new Vector(f.N);
-        if(f.N.dotProduct(V) < 0.0){
-            fN = f.N.multiply(-1.0);
-        }
-        return fN.multiply(2.0 * V.dotProduct(fN)).subtract(V).getNormalized();
+
+        return f.N.multiply(2.0 * V.dotProduct(f.N)).subtract(V).getNormalized();
     }
 
     public boolean intersectsPolygon(Face f){
@@ -98,7 +96,7 @@ public class Ray {
             //Vector N = e1.crossProduct(e2);
 
             Vector Np = e1.crossProduct(epv1);
-
+            
             double result = f.N.dotProduct(Np);
 
             // if result >= 0 it is on the correct side

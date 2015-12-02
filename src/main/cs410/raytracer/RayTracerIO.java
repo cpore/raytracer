@@ -341,7 +341,8 @@ public class RayTracerIO {
             case 'M':
                 int modelIdx = Integer.parseInt(parts[1].trim());
                 if(modelIdx > models.size()-1){
-                    throw new InvalidFormatException("Model index("+modelIdx+") out of range");
+                    break;
+                    //throw new InvalidFormatException("Model index("+modelIdx+") out of range");
                 }
                 int firstPolygon = Integer.parseInt(parts[2].trim());
                 int lastPolygon = Integer.parseInt(parts[3].trim());

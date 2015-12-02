@@ -105,27 +105,26 @@ public class ViewModel {
         Face f = intersects(ray, world);
         if(f == null) return lightSum;
 
-        /*if(count == 1)*/ lightSum = lightSum.add(f.Kd.multiply(ambient.B));
-
+        lightSum = lightSum.add(f.Kd.multiply(ambient.B));
 
         for(LightSource ls: lightSources){
 
             LightRay lightRay = ray.getLightRay(ls, f);
 
             if(isShadowed(lightRay, f, world)) continue;
-
-            // light source is not occluded or shadowed, so we can add the color
-            /*Vector fN = new Vector(f.N);
-            if(f.N.dotProduct(lightRay.V) < 0.0){
+            
+          
+            Vector fN = new Vector(f.N);
+            if(f.N.dotProduct(ray.getV()) < 0.0){
                 fN = f.N.multiply(-1.0);
-            }*/
-            RGB diffuse = f.Kd.multiply(ls.B.multiply(Math.max(0, lightRay.U.dotProduct(f.N))));
+            }
+            // light source is not occluded or shadowed, so we can add the color
+            RGB diffuse = ls.B.multiply(Math.max(0, lightRay.U.dotProduct(fN))).multiply(f.Kd);
             RGB specular = ls.B.multiply(Math.pow(Math.max(0, lightRay.V.dotProduct(lightRay.R)), f.alpha)).multiply(f.ks);
 
-
-            /* if(specular.rgb[RGB.r] != 0.0f || specular.rgb[RGB.g] != 0.0f || specular.rgb[RGB.b] != 0.0f)
-                            System.out.println("Specular= " + specular.printRaw());
-                        if(diffuse.rgb[RGB.r] != 0.0f || diffuse.rgb[RGB.g] != 0.0f || diffuse.rgb[RGB.b] != 0.0f)
+             //if(specular.rgb[RGB.r] != 0.0f || specular.rgb[RGB.g] != 0.0f || specular.rgb[RGB.b] != 0.0f)
+             //    System.out.println("Specular= " + specular.printRaw());
+                   /*     if(diffuse.rgb[RGB.r] != 0.0f || diffuse.rgb[RGB.g] != 0.0f || diffuse.rgb[RGB.b] != 0.0f)
                             System.out.println("Diffuse= " + diffuse.printRaw());*/
 
             lightSum = lightSum.add(diffuse.add(specular));
@@ -136,7 +135,7 @@ public class ViewModel {
             Ray reflectedRay = new Ray(ray.getPointOfIntersection(f), ray.getRv(f));
             RGB product = calculateColor(reflectedRay, lightSum, count, world).multiply(f.ks);
             if(product.belowThreshold()){
-                System.out.println("below");
+                //System.out.println("below");
                 return lightSum;
             }
             lightSum = lightSum.add(product);
@@ -153,7 +152,6 @@ public class ViewModel {
 
     private Face intersects(Ray ray, ArrayList<Model> world){
 
-
         for(Model m: world){
             for(Face f: m.faces){
                 // check if ray hits a polygon
@@ -161,7 +159,7 @@ public class ViewModel {
                     continue;
                 }
 
-                if(!isFrontFace(ray, f, world)) continue;
+                if(!isFirstFace(ray, f, world)) continue;
 
                 return f;
             }
@@ -178,8 +176,8 @@ public class ViewModel {
     }
 
 
-    private boolean isFrontFace(Ray ray, Face f, ArrayList<Model> world) {
-        if(f.kt >= 1.0) return false;
+    private boolean isFirstFace(Ray ray, Face f, ArrayList<Model> world) {
+        //if(f.kt >= 1.0) return false;
 
         double closestT = Double.MAX_VALUE;
         for(Model m: world){
@@ -192,7 +190,7 @@ public class ViewModel {
                     continue;
                 }
 
-                if(ray.getT(f2) < closestT && f2.kt < 1.0){
+                if(ray.getT(f2) < closestT/* && f2.kt < 1.0*/){
                     closestT = ray.getT(f2);
                 }
 
