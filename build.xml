@@ -72,7 +72,7 @@
 	</target>
 	
 	<target name="tar">
-		<tar destfile="${basedir}/PA3.tar"
+		<tar destfile="${basedir}/PA4.tar"
 		     basedir="${basedir}"
 		     excludes="src/cameras/**, jar/**, bin/**, .*, PA1.tar, PA2.tar, PA3.tar, src/test/**, src/models/**, src/testoutput/**, src/testreport/**, readme.md, src/libs/**" />
 		</target>

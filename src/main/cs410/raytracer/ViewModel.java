@@ -63,7 +63,7 @@ public class ViewModel {
             for(int v = minv; v <= maxv; v++){
 
                 ArrayList<RGB> avg = new ArrayList<RGB>();
-                int numRays = 1;
+                int numRays = 5;
                 for(int i=0; i<numRays; i++){
                     double r1 = r.nextDouble() - 0.5;
                     double r2 = r.nextDouble() - 0.5;
@@ -77,7 +77,7 @@ public class ViewModel {
 
                     Ray ray = new Ray(L, U);
 
-                    RGB I = calculateColor(ray, new RGB(), 0, copyModel());
+                    RGB I = calculateColor(ray, 0, copyModel());
                     avg.add(i, I);
 
                 }
@@ -98,22 +98,21 @@ public class ViewModel {
         return new RGB(r/avg.size(), g/avg.size(), b/avg.size());
     }
 
-    private RGB calculateColor(Ray ray, RGB lightSum, int count, ArrayList<Model> world) {
-        if(count >= 20) return lightSum;
+    private RGB calculateColor(Ray ray, int count, ArrayList<Model> world) {
+        RGB lightSum = new RGB();
         if(count++ == 20) return lightSum;
 
         Face f = intersects(ray, world);
         if(f == null) return lightSum;
 
-        lightSum = lightSum.add(f.Kd.multiply(ambient.B));
+        lightSum = f.Kd.multiply(ambient.B);
 
         for(LightSource ls: lightSources){
 
             LightRay lightRay = ray.getLightRay(ls, f);
 
             if(isShadowed(lightRay, f, world)) continue;
-            
-          
+
             Vector fN = new Vector(f.N);
             if(f.N.dotProduct(ray.getV()) < 0.0){
                 fN = f.N.multiply(-1.0);
@@ -121,31 +120,33 @@ public class ViewModel {
             // light source is not occluded or shadowed, so we can add the color
             RGB diffuse = ls.B.multiply(Math.max(0, lightRay.U.dotProduct(fN))).multiply(f.Kd);
             RGB specular = ls.B.multiply(Math.pow(Math.max(0, lightRay.V.dotProduct(lightRay.R)), f.alpha)).multiply(f.ks);
-
-             //if(specular.rgb[RGB.r] != 0.0f || specular.rgb[RGB.g] != 0.0f || specular.rgb[RGB.b] != 0.0f)
-             //    System.out.println("Specular= " + specular.printRaw());
-                   /*     if(diffuse.rgb[RGB.r] != 0.0f || diffuse.rgb[RGB.g] != 0.0f || diffuse.rgb[RGB.b] != 0.0f)
-                            System.out.println("Diffuse= " + diffuse.printRaw());*/
-
+            /*
+            if(specular.rgb[RGB.r] >=1 || specular.rgb[RGB.g] >=1 || specular.rgb[RGB.b] >=1)
+                System.out.println("Specular= " + specular.printRaw());
+            if(diffuse.rgb[RGB.r] >=1 || diffuse.rgb[RGB.g] >=1 || diffuse.rgb[RGB.b] >=1)
+                System.out.println("Diffuse= " + diffuse.printRaw());
+             */
             lightSum = lightSum.add(diffuse.add(specular));
+        }
+        
+
+        if(f.kt != 0.0){
+            //System.out.println("sfas");
+            Ray refractedRay = new Ray(ray.getPointOfIntersection(f), ray.getV().multiply(-1));
+            lightSum = lightSum.add(calculateColor(refractedRay, count, world).multiply(f.kt));
         }
 
         //System.out.println("count = " + count);
         if(f.ks != 0.0){
             Ray reflectedRay = new Ray(ray.getPointOfIntersection(f), ray.getRv(f));
-            RGB product = calculateColor(reflectedRay, lightSum, count, world).multiply(f.ks);
+            RGB product = calculateColor(reflectedRay, count, world).multiply(f.ks);
             if(product.belowThreshold()){
-                //System.out.println("below");
+                //System.out.println(product);
                 return lightSum;
             }
             lightSum = lightSum.add(product);
         }
 
-        if(f.kt != 0.0){
-            //System.out.println("sfas");
-            Ray refractedRay = new Ray(ray.getPointOfIntersection(f), ray.getV().multiply(-1));
-            lightSum = lightSum.add(calculateColor(refractedRay, lightSum, count, world).multiply(f.kt));
-        }
 
         return lightSum;
     }
@@ -222,7 +223,8 @@ public class ViewModel {
                     continue;
                 }
 
-                if(f2.kt != 0.0) continue;
+                //transparent face DO cast shadows!
+                //if(f2.kt != 0.0) continue;
 
                 if(lightRay.getT(f2) > lightRay.getT(f)){
                     //System.out.println("Shadowed");

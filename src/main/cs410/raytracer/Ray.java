@@ -72,8 +72,11 @@ public class Ray {
     
     public Vector getRv(Face f){
         Vector V = getV();
-
-        return f.N.multiply(2.0 * V.dotProduct(f.N)).subtract(V).getNormalized();
+        Vector fN = new Vector(f.N);
+        if(f.N.dotProduct(V) < 0.0){
+            fN = f.N.multiply(-1.0);
+        }
+        return fN.multiply(2.0 * V.dotProduct(fN)).subtract(V).getNormalized();
     }
 
     public boolean intersectsPolygon(Face f){

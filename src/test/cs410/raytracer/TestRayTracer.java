@@ -9,6 +9,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class TestRayTracer {
+    
+    String sphere_small_front = "src/models/sphere_small_front.ply";
+    String sphere_small_top = "src/models/sphere_small_top.ply";
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -200,7 +203,7 @@ public class TestRayTracer {
         String modelFile1 = "src/models/sphere.ply";
         String modelFile2 = "src/models/cube1.ply";
         String modelFile3 = "src/models/cube_big.ply";
-        String[] args = new String[]{cameraFile, materialFile, modelFile1, modelFile2, modelFile3, outputfile};
+        String[] args = new String[]{cameraFile, materialFile,  sphere_small_front, modelFile2, modelFile3, modelFile1, sphere_small_top, outputfile};
 
         runRayTracer(args);
     }
@@ -212,7 +215,7 @@ public class TestRayTracer {
         String materialFile = "src/materials/sphere_in_cube";
         String modelFile1 = "src/models/sphere.ply";
         String modelFile2 = "src/models/cube1.ply";
-        String[] args = new String[]{cameraFile, materialFile, modelFile1, modelFile2, outputfile};
+        String[] args = new String[]{cameraFile, materialFile, sphere_small_top,  modelFile2, sphere_small_front, modelFile1, outputfile};
 
         runRayTracer(args);
     }

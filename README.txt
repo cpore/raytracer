@@ -14,4 +14,4 @@ Running
 ------------
 After building, type:
 
-'java -jar /path/to/jar/raytracer.jar </path/to/camerafile> </path/to/propertiesfile> </path/to/inputfile_1>...</path/to/inputfile_n> </path/to/outputfile>'
+'java -jar /path/to/jar/raytracer.jar </path/to/camerafile> </path/to/propertiesfile> </path/to/modelfile_1>...</path/to/modelfile_n> </path/to/outputfile>'

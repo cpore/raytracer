@@ -30,7 +30,7 @@ public class Image {
         return pixels[0].length;
     }
     
-    public void fillPixel(int u, int v, RGB color){
+    public synchronized void fillPixel(int u, int v, RGB color){
         
         int x = u - minu;
         int y = v - minv; 
@@ -59,7 +59,7 @@ public class Image {
     private RGB getScaledPixel(RGB pixel){
         RGB scaledPixel = new RGB();
         for(int i = 0; i < 3; i++){
-            scaledPixel.rgb[i] = 255 * ((pixel.rgb[i] - minVal) / (maxVal - minVal));//(((MAX-MIN)*(pixel.rgb[i] - minVal)) / (maxVal - minVal)) + MIN;
+            scaledPixel.rgb[i] = 255.0 * ((pixel.rgb[i] - minVal) / (maxVal - minVal));//(((MAX-MIN)*(pixel.rgb[i] - minVal)) / (maxVal - minVal)) + MIN;
         }
         
         return scaledPixel; 
